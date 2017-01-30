@@ -1,11 +1,13 @@
-require_relative "./common"
+require "cuba/render"
 
 require_files File.expand_path("routes/**/*.rb", __dir__)
 
-class Escritorio::Routes < Cuba
-  define do
-    on "api" do
-      run Escritorio::Routes::Api
+module Escritorio
+  class Routes < Cuba
+    define do
+      on default do
+        run Escritorio::Routes::Public
+      end
     end
   end
 end
