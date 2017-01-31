@@ -1,9 +1,15 @@
 require "oj"
 require "cuba"
+require "sequel"
+
+DB_PATH = File.join("sqlite://", "db", "mydb")
+
+DB = Sequel.connect(DB_PATH)
 
 module Escritorio
-  Helpers = Module.new
-  Plugins = Module.new
+  Helpers   = Module.new
+  Plugins   = Module.new
+  Relations = Module.new
 
   Routes = Class.new(Cuba)
 end
@@ -17,3 +23,4 @@ end
 require "routes"
 require "helpers"
 require "plugins"
+require "relations"

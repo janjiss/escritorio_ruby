@@ -1,15 +1,58 @@
 namespace :db do
-  desc "Run migrations"
-  task :migrate, [:version] do |t, args|
-    require "sequel"
-    Sequel.extension :migration
-    db = Sequel.connect("sqlite://mydb")
-    if args[:version]
-      puts "Migrating to version #{args[:version]}"
-      Sequel::Migrator.run(db, "db/migrations", target: args[:version].to_i)
-    else
-      puts "Migrating to latest"
-      Sequel::Migrator.run(db, "db/migrations")
+  require "sequel"
+  Sequel.extension :migration
+
+  MIGRATIONS_PATH = File.join(File.dirname(__FILE__), "db", 'migrations').freeze
+  DB_PATH = File.join("sqlite://", "db", "mydb")
+
+  DB = Sequel.connect(DB_PATH)
+
+  desc "Prints current schema version"
+  task :version do
+    version = if DB.tables.include?(:schema_info)
+      DB[:schema_info].first[:version]
+    end || 0
+
+    puts "Schema Version: #{version}"
+  end
+
+  desc "Perform migration up to latest migration available"
+  task :migrate do
+    Sequel::Migrator.run(DB, MIGRATIONS_PATH)
+    Rake::Task['db:version'].execute
+  end
+
+  desc "Perform rollback to specified target or full rollback as default"
+  task :rollback, :target do |t, args|
+    args.with_defaults(:target => 0)
+
+    Sequel::Migrator.run(DB, MIGRATIONS_PATH, :target => args[:target].to_i)
+    Rake::Task['db:version'].execute
+  end
+
+  desc "Perform migration reset (full rollback and migration)"
+  task :reset do
+    Sequel::Migrator.run(DB, MIGRATIONS_PATH, :target => 0)
+    Sequel::Migrator.run(DB, MIGRATIONS_PATH)
+    Rake::Task['db:version'].execute
+  end
+end
+
+namespace :generate do
+  desc 'Generate a timestamped, empty Sequel migration.'
+  task :migration, :name do |_, args|
+    if args[:name].nil?
+      puts 'You must specify a migration name (e.g. rake generate:migration[create_events])!'
+      exit false
     end
+    content = "Sequel.migration do\n  up do\n    \n  end\n\n  down do\n    \n  end\nend\n"
+    timestamp = Time.now.to_i
+    filename = File.join(MIGRATIONS_PATH, "#{timestamp}_#{args[:name]}.rb")
+
+    File.open(filename, 'w+') do |file|
+      file.puts content
+    end
+
+    puts "Created the migration #{filename}"
   end
 end
