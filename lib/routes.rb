@@ -1,5 +1,3 @@
-require "cuba/render"
-
 require_files File.expand_path("routes/**/*.rb", __dir__)
 
 module Escritorio

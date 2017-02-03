@@ -1,8 +1,10 @@
-APP_DIR = Dir.pwd
-WEBAPP_DIR = File.join(APP_DIR, "lib")
-$LOAD_PATH.unshift(WEBAPP_DIR)
+require "rom"
+require "rom-sql"
+require "rom-repository"
+require "sqlite3"
 
-require "common"
+
+require_relative  "./lib/common"
 
 Cuba.plugin Cuba::CustomRender
 Cuba.plugin Escritorio::Helpers::TemplateHelpers

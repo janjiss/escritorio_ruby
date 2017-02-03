@@ -1,5 +1,3 @@
-class Escritorio::Relations::Posts
-  def all
-    DB.select.from(:posts)
-  end
+class Escritorio::Relations::Posts < ROM::Relation[:sql]
+  schema(:posts, infer: true)
 end

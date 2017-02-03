@@ -10,10 +10,10 @@ class PostsRelationsTest < EscritorioTest
     ]
 
     expected_posts.each do |p|
-      DB[:posts].insert(p)
+      ROM_CONTAINER.relation(:posts).insert(p)
     end
 
-    posts = Escritorio::Relations::Posts.new.all.to_a.map do |p|
+    posts = ROM_CONTAINER.relation(:posts).to_a.map do |p|
       {title: p[:title], body_md: p[:body_md]}
     end
 

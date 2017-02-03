@@ -7,7 +7,7 @@ $LOAD_PATH.unshift(WEBAPP_DIR)
 class EscritorioTest < Minitest::Test
   def run
     res = nil
-    DB.transaction do
+    Escritorio::Repos::Posts.new(ROM_CONTAINER).transaction do
       res = super
       raise Sequel::Rollback
     end
