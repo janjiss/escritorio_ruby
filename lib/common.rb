@@ -34,16 +34,22 @@ def require_files(path)
   Dir[path].sort.each { |rb| require rb }
 end
 
-require "routes"
-require "helpers"
-require "plugins"
-require "relations"
-require "repos"
-require "models"
+[
+  "routes",
+  "routes",
+  "helpers",
+  "plugins",
+  "relations",
+  "repos",
+  "models"
+].map { |m| require m }
+
 
 ROM_CONFIG = ROM::Configuration.new(:sql, DB_PATH)
 
-ROM_CONFIG.register_relation(Escritorio::Relations::Posts)
-ROM_CONFIG.register_relation(Escritorio::Relations::Configurations)
+relations = [
+  Escritorio::Relations::Posts,
+  Escritorio::Relations::Configurations
+].map { |relation|  ROM_CONFIG.register_relation(relation)}
 
 ROM_CONTAINER = ROM.container(ROM_CONFIG)
