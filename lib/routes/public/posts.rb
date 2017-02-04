@@ -1,4 +1,3 @@
-
 class Escritorio::Routes::Public::Posts < Cuba
   define do
     on root do
