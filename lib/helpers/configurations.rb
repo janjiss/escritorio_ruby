@@ -23,7 +23,7 @@ module Escritorio::Helpers::Configurations
     end
 
     def get_template_path(locals)
-      "templates/#{locals[:template_theme_name]}/assets/"
+      "/templates/#{locals[:template_theme_name]}/assets/"
     end
   end
 end
