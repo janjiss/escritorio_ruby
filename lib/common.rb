@@ -42,7 +42,7 @@ end
   "relations",
   "repos",
   "models"
-].map { |m| require m }
+].each { |m| require m }
 
 
 ROM_CONFIG = ROM::Configuration.new(:sql, DB_PATH)
@@ -50,6 +50,6 @@ ROM_CONFIG = ROM::Configuration.new(:sql, DB_PATH)
 [
   Escritorio::Relations::Posts,
   Escritorio::Relations::Configurations
-].map { |relation|  ROM_CONFIG.register_relation(relation)}
+].each { |relation|  ROM_CONFIG.register_relation(relation)}
 
 ROM_CONTAINER = ROM.container(ROM_CONFIG)
