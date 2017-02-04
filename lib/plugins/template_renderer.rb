@@ -1,23 +1,22 @@
 require "tilt"
 
 class Cuba
-  module CustomRender
+  module TemplateRenderer
     EXTENSION = "erb"
     LAYOUT    = "default"
     VIEW_PATH = File.expand_path("content/templates/", Dir.pwd)
     OPTIONS   = { default_encoding: Encoding.default_external }
+    CONFIG_HELPER = Escritorio::Helpers::Configurations
 
     def self.setup(app)
     end
 
     def render(template, locals = {}, layout = LAYOUT)
-      locals[:template_theme] = Cuba.get_template_theme()
-
-      locals[:asset_path] = "templates#{locals[:template_theme]}/assets/"
+      locals = CONFIG_HELPER.assign_config(locals)
       res.headers["Content-Type"] ||= "text/html; charset=utf-8"
       res.write(view(template, locals, layout))
     end
-
+    #
     def view(template, locals = {}, layout = LAYOUT)
       partial(layout, locals.merge(content: partial(template, locals)))
     end
@@ -27,25 +26,9 @@ class Cuba
     end
 
     def template_path(template, locals)
-      return File.join(VIEW_PATH + locals[:template_theme], "#{ template }.#{ EXTENSION }")
+      return File.join(VIEW_PATH + "/#{locals[:template_theme_name]}", "#{ template }.#{ EXTENSION }")
     end
 
-    # @private Renders any type of template file supported by Tilt.
-    #
-    # @example
-    #
-    #   # Renders home, and is assumed to be HAML.
-    #   _render("home.haml")
-    #
-    #   # Renders with some local variables
-    #   _render("home.haml", site_name: "My Site")
-    #
-    #   # Renders with HAML options
-    #   _render("home.haml", {}, ugly: true, format: :html5)
-    #
-    #   # Renders in layout
-    #   _render("layout.haml") { _render("home.haml") }
-    #
     def _render(template, locals = {}, options = {}, &block)
       _cache.fetch(template) {
         Tilt.new(template, 1, options.merge(outvar: '@_output'))

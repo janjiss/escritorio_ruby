@@ -1,8 +1,7 @@
 require_relative  "./lib/common"
 require "pry"
 
-Cuba.plugin Cuba::CustomRender
-Cuba.plugin Cuba::TemplateThemeSetter
+Cuba.plugin Cuba::TemplateRenderer
 Cuba.plugin Escritorio::Helpers::TemplateHelpers
 
 Cuba.use Rack::Static,
