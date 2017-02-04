@@ -1,12 +1,9 @@
 class Escritorio::Models::Configuration < Dry::Struct
-  constructor_type :strict_with_defaults
+  constructor_type :schema
 
   attribute :id, Types::Strict::Int.optional
   attribute :template, Types::Strict::String
+  attribute :created_at, Types::DateTime.default { DateTime.now }
+  attribute :updated_at, Types::DateTime.default { DateTime.now }
 
-  def to_h
-    super.select do |k, v|
-      [k, v] if v
-    end.to_h
-  end
 end

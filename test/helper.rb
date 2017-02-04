@@ -1,4 +1,5 @@
 require "minitest/autorun"
+require "pry"
 require_relative "fixtures/content"
 
 APP_DIR = Dir.pwd

@@ -21,6 +21,8 @@ namespace :db do
     )
 
     Escritorio::Repos::Posts.new(ROM_CONTAINER).create([post_1, post_2])
+
+    configuration = Escritorio::Models::Configuration.new({template: 'casper'})
+    Escritorio::Repos::Configurations.new(ROM_CONTAINER).create([configuration])
   end
 end
-
