@@ -47,7 +47,7 @@ end
 
 ROM_CONFIG = ROM::Configuration.new(:sql, DB_PATH)
 
-relations = [
+[
   Escritorio::Relations::Posts,
   Escritorio::Relations::Configurations
 ].map { |relation|  ROM_CONFIG.register_relation(relation)}
