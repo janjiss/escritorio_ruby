@@ -1,11 +1,26 @@
 require "rom"
 require "rom-sql"
 require 'rom/sql/rake_task'
-
-DB_PATH = File.join("sqlite://", "db", "escritorio")
+require_relative './lib/common'
+require_relative './test/fixtures/content'
 
 namespace :db do
   task :setup do
-    ROM::Configuration.new(:sql, DB_PATH)
+    ROM_CONFIG
+  end
+
+  task :seed do
+    post_1 = Escritorio::Models::Post.new(
+      title: "The problem with dependency injection",
+      body_md: ContentFixtures.content_1,
+    )
+
+    post_2 = Escritorio::Models::Post.new(
+      title: "5 less used Enumerators of Ruby",
+      body_md: ContentFixtures.content_2,
+    )
+
+    Escritorio::Repos::Posts.new(ROM_CONTAINER).create([post_1, post_2])
   end
 end
+

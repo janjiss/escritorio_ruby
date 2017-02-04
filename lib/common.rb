@@ -2,9 +2,11 @@ require "oj"
 require "cuba"
 require "sequel"
 require 'dry-struct'
+require "sqlite3"
 require "rom"
 require "rom-sql"
 require "rom-repository"
+require "redcarpet"
 
 APP_DIR = Dir.pwd
 WEBAPP_DIR = File.join(APP_DIR, "lib")
@@ -37,6 +39,7 @@ require "helpers"
 require "plugins"
 require "relations"
 require "repos"
+require "models"
 
 ROM_CONFIG = ROM::Configuration.new(:sql, DB_PATH)
 

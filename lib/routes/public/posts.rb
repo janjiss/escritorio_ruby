@@ -2,6 +2,7 @@ class Escritorio::Routes::Public::Posts < Cuba
   define do
     on root do
       on get do
+        posts = Escritorio::Repos::Posts.new(ROM_CONTAINER).all
         render "index", {
           meta_title: "Hello",
           meta_description: "Meta descition",
@@ -10,18 +11,7 @@ class Escritorio::Routes::Public::Posts < Cuba
           ghost_head: "",
           ghost_foot: "",
           blog: OpenStruct.new(url: "url", title: "Hello from escritorio", description: "Publishing platform"),
-          posts: [
-            OpenStruct.new({
-              id: 1,
-              excerpt: "It's been a while since I started using ROM and one of the things I found missing is FactoryGirl like gem for pre-populating the database with",
-              title: "Walkthrough of my .vimrc file for Ruby development",
-              body: "Post body",
-              date: Date.today,
-              author: OpenStruct.new(
-                name: "Janis Miezitis"
-              )
-            })
-          ],
+          posts: posts,
           pagination: ""
         }
       end
