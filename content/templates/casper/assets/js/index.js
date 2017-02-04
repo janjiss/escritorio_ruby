@@ -7,7 +7,6 @@
     "use strict";
 
     var $document = $(document);
-
     $document.ready(function () {
 
         var $postContent = $(".post-content");

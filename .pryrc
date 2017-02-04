@@ -1,1 +1,2 @@
-require_relative "./lib/common"
+require "awesome_print"
+require_relative  "./lib/common"
