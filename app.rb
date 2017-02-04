@@ -1,9 +1,3 @@
-require "rom"
-require "rom-sql"
-require "rom-repository"
-require "sqlite3"
-
-
 require_relative  "./lib/common"
 
 Cuba.plugin Cuba::CustomRender
