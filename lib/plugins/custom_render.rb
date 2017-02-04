@@ -4,13 +4,16 @@ class Cuba
   module CustomRender
     EXTENSION = "erb"
     LAYOUT    = "default"
-    VIEW_PATH = File.expand_path("content/templates/casper", Dir.pwd)
+    VIEW_PATH = File.expand_path("content/templates/", Dir.pwd)
     OPTIONS   = { default_encoding: Encoding.default_external }
 
     def self.setup(app)
     end
 
     def render(template, locals = {}, layout = LAYOUT)
+      locals[:template_theme] = Cuba.get_template_theme()
+
+      locals[:asset_path] = "templates#{locals[:template_theme]}/assets/"
       res.headers["Content-Type"] ||= "text/html; charset=utf-8"
       res.write(view(template, locals, layout))
     end
@@ -20,11 +23,11 @@ class Cuba
     end
 
     def partial(template, locals = {})
-      _render(template_path(template), locals, OPTIONS)
+      _render(template_path(template, locals), locals, OPTIONS)
     end
 
-    def template_path(template)
-      return File.join(VIEW_PATH, "#{ template }.#{ EXTENSION }")
+    def template_path(template, locals)
+      return File.join(VIEW_PATH + locals[:template_theme], "#{ template }.#{ EXTENSION }")
     end
 
     # @private Renders any type of template file supported by Tilt.

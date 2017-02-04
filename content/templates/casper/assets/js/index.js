@@ -7,8 +7,8 @@
     "use strict";
 
     var $document = $(document);
-
     $document.ready(function () {
+      console.log("casper 1");
 
         var $postContent = $(".post-content");
         $postContent.fitVids();
