@@ -41,5 +41,6 @@ require "repos"
 ROM_CONFIG = ROM::Configuration.new(:sql, DB_PATH)
 
 ROM_CONFIG.register_relation(Escritorio::Relations::Posts)
+ROM_CONFIG.register_relation(Escritorio::Relations::Configurations)
 
 ROM_CONTAINER = ROM.container(ROM_CONFIG)
