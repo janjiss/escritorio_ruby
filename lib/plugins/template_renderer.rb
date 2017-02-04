@@ -16,7 +16,7 @@ class Cuba
       res.headers["Content-Type"] ||= "text/html; charset=utf-8"
       res.write(view(template, locals, layout))
     end
-    #
+
     def view(template, locals = {}, layout = LAYOUT)
       partial(layout, locals.merge(content: partial(template, locals)))
     end
