@@ -1,4 +1,5 @@
 require "minitest/autorun"
+require_relative "fixtures/content"
 
 APP_DIR = Dir.pwd
 WEBAPP_DIR = File.join(APP_DIR, "lib")
