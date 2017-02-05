@@ -2,6 +2,7 @@ require "oj"
 require "cuba"
 require "sequel"
 require 'dry-struct'
+require "dry-container"
 require "sqlite3"
 require "rom"
 require "rom-sql"
@@ -41,8 +42,12 @@ require "relations"
 require "repos"
 require "models"
 
-ROM_CONFIG = ROM::Configuration.new(:sql, DB_PATH)
+APP = Dry::Container.new
 
-ROM_CONFIG.register_relation(Escritorio::Relations::Posts)
+APP.register(:rom_config) { ROM::Configuration.new(:sql, DB_PATH) }
+APP.resolve(:rom_config).register_relation(Escritorio::Relations::Posts)
+APP.register(:rom) { ROM.container(APP.resolve(:rom_config)) }
 
-ROM_CONTAINER = ROM.container(ROM_CONFIG)
+APP.namespace('repos') do |namespace|
+  namespace.register('posts') { Escritorio::Repos::Posts.new(APP.resolve(:rom)) }
+end

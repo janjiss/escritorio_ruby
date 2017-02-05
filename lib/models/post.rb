@@ -7,11 +7,19 @@ class Escritorio::Models::Post < Dry::Struct
   attribute :created_at, Types::DateTime.default { DateTime.now }
   attribute :updated_at, Types::DateTime.default { DateTime.now }
 
+  def image
+    ""
+  end
+
   def meta_title
     title
   end
 
   def excerpt
+    body
+  end
+
+  def content
     body
   end
 

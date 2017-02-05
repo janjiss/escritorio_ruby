@@ -1,14 +1,12 @@
 require "minitest/autorun"
-require_relative "fixtures/content"
 
-APP_DIR = Dir.pwd
-WEBAPP_DIR = File.join(APP_DIR, "lib")
-$LOAD_PATH.unshift(WEBAPP_DIR)
+require_relative "../lib/common"
+require_relative "fixtures/content"
 
 class EscritorioTest < Minitest::Test
   def run
     res = nil
-    Escritorio::Repos::Posts.new(ROM_CONTAINER).transaction do
+    APP.resolve("repos.posts").transaction do
       res = super
       raise Sequel::Rollback
     end
