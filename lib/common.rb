@@ -20,11 +20,12 @@ module Types
 end
 
 module Escritorio
-  Helpers   = Module.new
-  Plugins   = Module.new
-  Relations = Module.new
-  Models    = Module.new
-  Repos     = Module.new
+  Helpers     = Module.new
+  Plugins     = Module.new
+  Relations   = Module.new
+  Models      = Module.new
+  Repos       = Module.new
+  Middlewares = Module.new
 
   Routes = Class.new(Cuba)
 end
@@ -41,6 +42,7 @@ require "plugins"
 require "relations"
 require "repos"
 require "models"
+require "middlewares"
 
 APP = Dry::Container.new
 
@@ -50,4 +52,5 @@ APP.register(:rom) { ROM.container(APP.resolve(:rom_config)) }
 
 APP.namespace('repos') do |namespace|
   namespace.register('posts') { Escritorio::Repos::Posts.new(APP.resolve(:rom)) }
+  namespace.register('configurations') { Escritorio::Repos::Configurations.new(APP.resolve(:rom)) }
 end

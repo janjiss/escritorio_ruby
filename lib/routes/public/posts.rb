@@ -3,7 +3,7 @@ class Escritorio::Routes::Public::Posts < Cuba
     on root do
       on get do
         posts = APP.resolve('repos.posts').all
-        render "index", {
+        template_render "index", {
           meta_title: "Hello",
           meta_description: "Meta descition",
           body_class: "",
@@ -20,7 +20,7 @@ class Escritorio::Routes::Public::Posts < Cuba
     on ":id" do |id|
       on get do
         post = APP.resolve('repos.posts').by_id(id)
-        render "post", {
+        template_render "post", {
           meta_title: "Hello",
           meta_description: "Meta descition",
           body_class: "",
