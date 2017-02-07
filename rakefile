@@ -21,6 +21,10 @@ namespace :db do
     )
 
     APP.resolve('repos.posts').create([post_1, post_2])
+
+    configuration = Escritorio::Models::Configuration.new({template: 'casper'})
+
+    APP.resolve('repos.configurations').create(configuration)
   end
 end
 

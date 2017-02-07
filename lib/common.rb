@@ -52,4 +52,5 @@ APP.register(:rom) { ROM.container(APP.resolve(:rom_config)) }
 
 APP.namespace('repos') do |namespace|
   namespace.register('posts') { Escritorio::Repos::Posts.new(APP.resolve(:rom)) }
+  namespace.register('configurations') { Escritorio::Repos::Configurations.new(APP.resolve(:rom)) }
 end

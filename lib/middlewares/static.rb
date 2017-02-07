@@ -13,15 +13,13 @@ class Escritorio::Middlewares::Static
     static = Rack::Static.new(
       @app,
       root: CONTENT_PATHS,
-      urls: [ADMIN_ASSET_PATHS] + template_asset_paths
+      urls: [ADMIN_ASSET_PATHS, template_asset_path]
     ).call(env)
   end
 
-  def template_asset_paths
-    templates = Pathname.new(File.join(CONTENT_PATHS, "templates"))
-      .children
-      .select { |file| file.directory? }
-      .map { |directory| File.join("/", "templates", directory.basename.to_s, "assets") }
+  def template_asset_path
+    configuration = APP.resolve("repos.configurations").get_config
+    File.join("/", "templates", configuration.template, "assets")
   end
 end
 
