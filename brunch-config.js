@@ -1,7 +1,7 @@
 module.exports = {
   files: {
-    javascripts: { joinTo: 'js/admin.js' },
-    stylesheets: { joinTo: 'css/admin.css' }
+    javascripts: { joinTo: 'assets/js/admin.js' },
+    stylesheets: { joinTo: 'assets/css/admin.css' }
   },
   paths: {
     public: 'content/admin',
