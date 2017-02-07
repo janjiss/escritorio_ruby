@@ -31,22 +31,6 @@ class Cuba
       APP.resolve("repos.configurations").get_config
     end
 
-    # @private Renders any type of template file supported by Tilt.
-    #
-    # @example
-    #
-    #   # Renders home, and is assumed to be HAML.
-    #   _render("home.haml")
-    #
-    #   # Renders with some local variables
-    #   _render("home.haml", site_name: "My Site")
-    #
-    #   # Renders with HAML options
-    #   _render("home.haml", {}, ugly: true, format: :html5)
-    #
-    #   # Renders in layout
-    #   _render("layout.haml") { _render("home.haml") }
-    #
     def _render(template, locals = {}, options = {}, &block)
       _cache.fetch(template) {
         Tilt.new(template, 1, options.merge(outvar: '@_output'))
