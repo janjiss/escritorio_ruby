@@ -1,16 +1,12 @@
 class Escritorio::Routes::Public::Posts < Cuba
   define do
+    config = APP.resolve('repos.configurations').get_config
+
     on root do
       on get do
         posts = APP.resolve('repos.posts').all
         template_render "index", {
-          meta_title: "Hello",
-          meta_description: "Meta descition",
-          body_class: "",
-          navigation: "",
-          ghost_head: "",
-          ghost_foot: "",
-          blog: OpenStruct.new(url: "url", title: "Hello from escritorio", description: "Publishing platform"),
+          blog: config.blog,
           posts: posts,
           pagination: ""
         }
@@ -21,15 +17,9 @@ class Escritorio::Routes::Public::Posts < Cuba
       on get do
         post = APP.resolve('repos.posts').by_id(id)
         template_render "post", {
-          meta_title: "Hello",
-          meta_description: "Meta descition",
-          body_class: "",
-          navigation: "",
-          ghost_head: "",
-          ghost_foot: "",
           current_url: "",
           post: post,
-          blog: OpenStruct.new(url: "url", title: "Hello from escritorio", description: "Publishing platform")
+          blog: config.blog
         }
       end
     end

@@ -4,8 +4,8 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <title><%= meta_title %></title>
-    <meta name="description" content="<%= meta_description %>" />
+    <title><%= blog.meta_title %></title>
+    <meta name="description" content="<%= blog.meta_description %>" />
 
     <meta name="HandheldFriendly" content="True" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,9 +15,9 @@
     <link rel="stylesheet" type="text/css" href="<%= template_asset_path "css/screen.css" %>" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
 
-    <%= ghost_head %>
+    <%= blog.header_includes %>
 </head>
-<body class="<%= body_class %> nav-closed">
+<body>
   <div class="site-wrapper">
     <%= content %>
 
@@ -28,7 +28,7 @@
   </div>
 
   <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script>
-  <%= ghost_foot %>
+  <%= blog.footer_includes %>
   <script type="text/javascript" src="<%= template_asset_path "js/jquery.fitvids.js" %>"></script>
   <script type="text/javascript" src="<%= template_asset_path "js/index.js" %>"></script>
 </body>
