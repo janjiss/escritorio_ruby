@@ -1,6 +1,9 @@
 {
   "name": "escritorio",
   "author": "Janis Miezitis",
+  "scripts": {
+    "brunch": "./node_modules/.bin/brunch watch --server"
+  },
   "repository": {
     "type": "git",
     "url": "github.com/janjiss/escritorio"
