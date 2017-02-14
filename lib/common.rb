@@ -24,6 +24,7 @@ module Escritorio
   Plugins     = Module.new
   Relations   = Module.new
   Models      = Module.new
+  Modules     = Module.new
   Repos       = Module.new
   Middlewares = Module.new
 
@@ -42,6 +43,7 @@ require "plugins"
 require "relations"
 require "repos"
 require "models"
+require "modules"
 require "middlewares"
 
 APP = Dry::Container.new

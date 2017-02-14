@@ -22,4 +22,3 @@ class Escritorio::Middlewares::Static
     File.join("/", "templates", configuration.template, "assets")
   end
 end
-
