@@ -11,7 +11,7 @@ body {
 }
 
 h1 {
-    font-size: 50px;
+    font-size: 32px;
     font-weight: bold;
     line-height: 50px;;
     margin-bottom: 40px;
@@ -21,22 +21,18 @@ h1 {
 }
 
 h2 {
-    font-size: 32px;
+    font-size: 28px;
     line-height: 42px;
 }
 
 h3 {
-    font-size: 26px;
+    font-size: 22px;
     line-height: 32px;
-}
-
-h4 {
-    font-size: 24px;
-    line-height: 28px;
 }
 
 p {
     margin-bottom: 10px;
+    font-size: 18px;
 }
 
 a {
@@ -66,11 +62,11 @@ blockquote {
 }
 
 .toolbar-wrapper {
+  box-shadow: 0 1px rgba(99,114,130,0.16);
   background-color: #fff;
   position: fixed;
   top: 0;
   width: 100%;
-  border-bottom: 1px #5ba4e5 solid;
 }
 
 .toolbar-block {
@@ -183,12 +179,58 @@ blockquote {
   clear: both;
 }
 
-#editor {
+#title {
+  overflow: auto;
+  resize: none;
+  border: 0;
+  width: 100%;
+  font-size: 36px;
+  line-height: 40px;
+  font-size: 36px;
+  font-weight: bold;
+  line-height: 50px;;
   margin-left: auto;
   margin-right: auto;
   width: 65%;
   margin-top: 60px;
 }
+
+#title[contenteditable=true]:empty:before{
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+  opacity: 0.3;
+}
+
+/* */
+
+#editor {
+  margin-left: auto;
+  margin-right: auto;
+  width: 65%;
+}
+
 #editor img{
   width: 100%;
+}
+
+.button-xsmall {
+  font-size: 70%;
+}
+
+.button-small {
+  font-size: 85%;
+}
+
+.button-large {
+  font-size: 110%;
+}
+
+.button-xlarge {
+  font-size: 125%;
+}
+
+.save-button {
+  float: right;
+  margin-top: 5px;
+  margin-right: 10px;
 }

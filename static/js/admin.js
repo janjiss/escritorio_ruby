@@ -15,15 +15,11 @@ var simpleMobiledoc = {
   markups: [],
   atoms: [],
   cards: [],
-  sections: [
-    [1, "p", [
-      [0, [], 0, "#hello"]
-    ]]
-  ]
+  sections: []
 };
 
 const element = document.querySelector('#editor');
-const options = { mobiledoc: simpleMobiledoc, cards: [imageCard]};
+const options = { mobiledoc: simpleMobiledoc, cards: [imageCard], placeholder: "Name your story..."};
 const editor = new Mobiledoc.Editor(options);
 
 const h1Button            = document.getElementById("h1-button")
@@ -68,3 +64,12 @@ blockquoteButton.addEventListener("click",() => {
 });
 
 editor.render(element);
+
+// Quirks
+
+// Remove ability to have a newline in textarea
+$('#title').keypress(function(e){
+   if (e.keyCode == 13) return false
+})
+
+$('#title').focus()
