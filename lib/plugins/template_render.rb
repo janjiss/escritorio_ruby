@@ -12,34 +12,32 @@ class Cuba
     end
 
     def template_view(template, locals = {}, layout = LAYOUT)
-      partial(layout, locals.merge(content: template_partial(template, locals)))
+      template_partial(layout, locals.merge(content: template_partial(template, locals)))
     end
 
     def template_partial(template, locals = {})
-      _render(template_path(template), locals, OPTIONS)
+      _template_render(template_path(template), locals, OPTIONS)
     end
 
     def template_path(template)
-      return File.join(view_path, "#{ template }.#{ EXTENSION }")
+      return File.join(template_view_path, "#{ template }.#{ EXTENSION }")
     end
 
-    def view_path
-      File.expand_path(File.join("content/templates/#{config.template}"), Dir.pwd)
+    def template_view_path
+      File.expand_path(File.join("content/templates/#{template_config.template}"), Dir.pwd)
     end
 
-    def config
+    def template_config
       APP.resolve("repos.configurations").get_config
     end
 
-    def _render(template, locals = {}, options = {}, &block)
-      _cache.fetch(template) {
+    def _template_render(template, locals = {}, options = {}, &block)
+      _template_cache.fetch(template) {
         Tilt.new(template, 1, options.merge(outvar: '@_output'))
       }.render(self, locals, &block)
     end
 
-    # @private Used internally by #_render to cache the
-    #          Tilt templates.
-    def _cache
+    def _template_cache
       Thread.current[:_cache] ||= Tilt::Cache.new
     end
   end

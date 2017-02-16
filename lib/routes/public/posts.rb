@@ -20,7 +20,6 @@ class Escritorio::Routes::Public::Posts < Cuba
       on get do
         post = APP.resolve('repos.posts').by_id(id)
         template_render "post", {
-          current_url: "",
           meta_title: post.meta_title,
           meta_description: post.meta_description,
           post: post,

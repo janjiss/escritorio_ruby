@@ -1,26 +1,29 @@
 {
-  "name": "escritorio",
-  "author": "Janis Miezitis",
-  "repository": {
-    "type": "git",
-    "url": "github.com/janjiss/escritorio"
+  "name": "brunch-app",
+  "description": "Brunch.io application",
+  "private": true,
+  "author": "Brunch",
+  "version": "0.0.1",
+  "repository": "",
+  "scripts": {
+    "start": "brunch watch --server",
+    "build": "brunch build --production"
   },
-
   "dependencies": {
+    "copycat-brunch": "^1.1.0",
+    "mobiledoc-kit": "^0.10.14",
+    "react-mobiledoc-editor": "^0.1.0",
+    "showdown": "^1.6.4"
   },
   "devDependencies": {
-    "auto-reload-brunch": "^2.0.0",
-    "babel-brunch": "~6.0.0",
-    "babel-preset-es2015": "~6.3.13",
-    "brunch": "^2.4.0",
+    "auto-reload-brunch": "^2",
+    "babel-brunch": "~6.0",
+    "babel-preset-latest": "^6",
+    "babel-preset-react": "~6.22",
     "clean-css-brunch": "^2.0.0",
     "css-brunch": "^2.0.0",
-    "eslint-brunch": "^3.11.1",
-    "eslint-config-standard": "^6.2.0",
-    "eslint-plugin-promise": "^3.0.0",
-    "eslint-plugin-standard": "^2.0.1",
-    "javascript-brunch": "^2.0.0",
-    "sass-brunch": "^2.6.3",
-    "uglify-js-brunch": "^2.0.0"
+    "react": "^15.4",
+    "react-dom": "^15.4",
+    "uglify-js-brunch": "^2"
   }
 }
