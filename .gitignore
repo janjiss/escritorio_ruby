@@ -22,5 +22,8 @@ Thumbs.db
 # NPM packages folder.
 node_modules/
 
+# Compiled assets of admin
+content/admin/assets/
+
 # Brunch output folder.
 public/
