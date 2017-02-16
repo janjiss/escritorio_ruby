@@ -31,8 +31,9 @@ const h2Button            = document.getElementById("h2-button")
 const h3Button            = document.getElementById("h3-button")
 const boldButton          = document.getElementById("bold-button")
 const addImageButton      = document.getElementById("add-image-button")
-const orderedListButton   = document.getElementById("ordered-list-button")
+const blockquoteButton    = document.getElementById("blockquote-button")
 const unorderedListButton = document.getElementById("unordered-list-button")
+const orderedListButton   = document.getElementById("ordered-list-button")
 
 h1Button.addEventListener("click",() => {
   editor.toggleSection('h1');
@@ -60,6 +61,10 @@ boldButton.addEventListener("click",() => {
 
 addImageButton.addEventListener("click",() => {
   editor.insertCard('image-card');
+});
+
+blockquoteButton.addEventListener("click",() => {
+  editor.toggleSection('blockquote');
 });
 
 editor.render(element);
