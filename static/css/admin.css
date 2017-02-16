@@ -186,9 +186,9 @@ blockquote {
 #editor {
   margin-left: auto;
   margin-right: auto;
-  width: 90%;
+  width: 65%;
   margin-top: 60px;
 }
-.editor-image img{
+#editor img{
   width: 100%;
 }

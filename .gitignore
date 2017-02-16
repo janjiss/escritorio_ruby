@@ -23,7 +23,7 @@ Thumbs.db
 node_modules/
 
 # Compiled assets of admin
-content/admin/assets/
+content/admin/assets/*
 
 # Brunch output folder.
 public/

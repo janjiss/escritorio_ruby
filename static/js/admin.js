@@ -5,7 +5,7 @@ const imageCard = {
   name: 'image-card',
   type: 'dom',
   render() {
-    let el = $('<div class="editor-image"><img src="http://lorempixel.com/1000/600/"></img></div>')
+    let el = $('<img src="http://lorempixel.com/1000/600/"></img>')
     return el[0]
   }
 };
