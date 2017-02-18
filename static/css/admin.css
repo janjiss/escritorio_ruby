@@ -195,22 +195,21 @@ blockquote {
   margin-top: 60px;
 }
 
-#title[contenteditable=true]:empty:before{
-  content: attr(placeholder);
-  display: block; /* For Firefox */
-  opacity: 0.3;
-}
-
 /* */
 
-#editor {
+.editor {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.editable {
+  margin-top: 60px;
   margin-left: auto;
   margin-right: auto;
   width: 65%;
 }
-
-#editor img{
-  width: 100%;
+.placeholder {
+  position: absolute;
 }
 
 .button-xsmall {

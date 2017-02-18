@@ -1,75 +1,181 @@
-import Mobiledoc from 'mobiledoc-kit'
-const domParser = new DOMParser()
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Editor, EditorState, RichUtils} from 'draft-js';
 
-const imageCard = {
-  name: 'image-card',
-  type: 'dom',
-  render() {
-    let el = $('<img src="http://lorempixel.com/1000/600/"></img>')
-    return el[0]
+class EscritorioEditor extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {editorState: EditorState.createEmpty()};
+
+    this.focus = () => this.refs.editor.focus();
+    this.onChange = (editorState) => this.setState({editorState});
+
+    this.handleKeyCommand = (command) => this._handleKeyCommand(command);
+    this.onTab = (e) => this._onTab(e);
+    this.toggleBlockType = (type) => this._toggleBlockType(type);
+    this.toggleInlineStyle = (style) => this._toggleInlineStyle(style);
   }
+
+  _handleKeyCommand(command) {
+    const {editorState} = this.state;
+    const newState = RichUtils.handleKeyCommand(editorState, command);
+    if (newState) {
+      this.onChange(newState);
+      return true;
+    }
+    return false;
+  }
+
+  _onTab(e) {
+    const maxDepth = 4;
+    this.onChange(RichUtils.onTab(e, this.state.editorState, maxDepth));
+  }
+
+  _toggleBlockType(blockType) {
+    this.onChange(
+      RichUtils.toggleBlockType(
+        this.state.editorState,
+        blockType
+      )
+    );
+  }
+
+  _toggleInlineStyle(inlineStyle) {
+    this.onChange(
+      RichUtils.toggleInlineStyle(
+        this.state.editorState,
+        inlineStyle
+      )
+    );
+  }
+
+  render() {
+    const {editorState} = this.state;
+
+    return (
+      <div className="editor {className}">
+        <div className="toolbar-wrapper">
+          <div className="toolbar-block">
+            <ul>
+              <InlineStyleControls
+                editorState={editorState}
+                onToggle={this.toggleInlineStyle}
+              />
+              <BlockStyleControls
+                editorState={editorState}
+                onToggle={this.toggleBlockType}
+              />
+            </ul>
+          </div>
+        </div>
+        <div className="editable" onClick={this.focus}>
+          <Editor
+            editorState={editorState}
+            handleKeyCommand={this.handleKeyCommand}
+            onChange={this.onChange}
+            onTab={this.onTab}
+            ref="editor"
+            spellCheck={true}
+          />
+        </div>
+      </div>
+    );
+  }
+}
+
+class StyleButton extends React.Component {
+  constructor() {
+    super();
+    this.onToggle = (e) => {
+      e.preventDefault();
+      this.props.onToggle(this.props.style);
+    };
+  }
+
+  render() {
+    let className = '';
+    let display = null;
+    if (this.props.active) {
+      className += ' selected';
+    }
+
+    if (this.props.image) {
+      display = <img src={this.props.image}/>
+    } else {
+      display = this.props.label
+    }
+
+    return (
+      <li className={className}>
+        <button onMouseDown={this.onToggle}>
+          {display}
+          <label>{this.props.label}</label>
+        </button>
+      </li>
+    );
+  }
+}
+
+const BLOCK_TYPES = [
+  {label: 'H1', style: 'header-one'},
+  {label: 'H2', style: 'header-two'},
+  {label: 'H3', style: 'header-three'},
+  {label: 'Blockquote', style: 'blockquote', image: '/admin/assets/images/tools/quote.svg'},
+  {label: 'UL', style: 'unordered-list-item', image: '/admin/assets/images/tools/list-bullets.svg'},
+  {label: 'OL', style: 'ordered-list-item', image: '/admin/assets/images/tools/list-number.svg'},
+  {label: 'Code Block', style: 'code-block', image: '/admin/assets/images/tools/file-code-edit.svg'},
+];
+
+const BlockStyleControls = (props) => {
+  const {editorState} = props;
+  const selection = editorState.getSelection();
+  const blockType = editorState
+    .getCurrentContent()
+    .getBlockForKey(selection.getStartKey())
+    .getType();
+
+  return (
+    <div className="RichEditor-controls">
+      {BLOCK_TYPES.map((type) =>
+        <StyleButton
+        key={type.label}
+        active={type.style === blockType}
+        label={type.label}
+        onToggle={props.onToggle}
+        style={type.style}
+        image={type.image}
+          />
+      )}
+    </div>
+  );
 };
 
-var simpleMobiledoc = {
-  version: "0.3.1",
-  markups: [],
-  atoms: [],
-  cards: [],
-  sections: []
+var INLINE_STYLES = [
+  {label: 'Bold', style: 'BOLD', image: "/admin/assets/images/tools/bold.svg"},
+  {label: 'Italic', style: 'ITALIC', image: "/admin/assets/images/tools/italic.svg"},
+  {label: 'Underline', style: 'UNDERLINE', image: "/admin/assets/images/tools/underline.svg"},
+  {label: 'Monospace', style: 'CODE', image: "/admin/assets/images/tools/file-code-1.svg"},
+];
+
+const InlineStyleControls = (props) => {
+  var currentStyle = props.editorState.getCurrentInlineStyle();
+  return (
+    <span>
+      {INLINE_STYLES.map(type =>
+          <StyleButton
+          key={type.label}
+          active={currentStyle.has(type.style)}
+          label={type.label}
+          onToggle={props.onToggle}
+          image={type.image}
+          style={type.style}
+            />
+      )}
+    </span>
+  );
 };
 
-const element = document.querySelector('#editor');
-const options = { mobiledoc: simpleMobiledoc, cards: [imageCard], placeholder: "Name your story..."};
-const editor = new Mobiledoc.Editor(options);
-
-const h1Button            = document.getElementById("h1-button")
-const h2Button            = document.getElementById("h2-button")
-const h3Button            = document.getElementById("h3-button")
-const boldButton          = document.getElementById("bold-button")
-const addImageButton      = document.getElementById("add-image-button")
-const blockquoteButton    = document.getElementById("blockquote-button")
-const unorderedListButton = document.getElementById("unordered-list-button")
-const orderedListButton   = document.getElementById("ordered-list-button")
-
-h1Button.addEventListener("click",() => {
-  editor.toggleSection('h1');
-});
-
-h2Button.addEventListener("click",() => {
-  editor.toggleSection('h2');
-});
-
-h3Button.addEventListener("click",() => {
-  editor.toggleSection('h3');
-});
-
-unorderedListButton.addEventListener("click",() => {
-  editor.toggleSection('ul');
-});
-
-orderedListButton.addEventListener("click",() => {
-  editor.toggleSection('ol');
-});
-
-boldButton.addEventListener("click",() => {
-  editor.toggleMarkup('strong');
-});
-
-addImageButton.addEventListener("click",() => {
-  editor.insertCard('image-card');
-});
-
-blockquoteButton.addEventListener("click",() => {
-  editor.toggleSection('blockquote');
-});
-
-editor.render(element);
-
-// Quirks
-
-// Remove ability to have a newline in textarea
-$('#title').keypress(function(e){
-   if (e.keyCode == 13) return false
-})
-
-$('#title').focus()
+ReactDOM.render(
+  <EscritorioEditor />,
+  document.getElementById('editor')
+);

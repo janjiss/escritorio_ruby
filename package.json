@@ -9,7 +9,10 @@
     "url": "github.com/janjiss/escritorio"
   },
   "dependencies": {
+    "brunch": "^2.10.8",
     "copycat-brunch": "^1.1.0",
+    "draft-js": "^0.10.0",
+    "draft-js-editor": "^1.8.13",
     "mobiledoc-kit": "^0.10.14",
     "react-mobiledoc-editor": "^0.1.0",
     "showdown": "^1.6.4"
