@@ -16,4 +16,8 @@ module Escritorio::Modules::MemoryCache
   def update_cache(key, value)
     CACHE[key] = value
   end
+
+  def delete_cache(key)
+    CACHE.delete(key)
+  end
 end
