@@ -10,14 +10,14 @@
     <meta name="HandheldFriendly" content="True" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="shortcut icon" href="<%=template_asset_path "favicon.ico"%>">
+    <link rel="shortcut icon" href="<%= template_asset_path "favicon.ico"%>">
 
     <link rel="stylesheet" type="text/css" href="<%= template_asset_path "css/screen.css" %>" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
 
-    <%= ghost_head %>
+    <%= blog.header_includes %>
 </head>
-<body class="<%= body_class %> nav-closed">
+<body>
   <div class="site-wrapper">
     <%= content %>
 
@@ -28,7 +28,7 @@
   </div>
 
   <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script>
-  <%= ghost_foot %>
+  <%= blog.footer_includes %>
   <script type="text/javascript" src="<%= template_asset_path "js/jquery.fitvids.js" %>"></script>
   <script type="text/javascript" src="<%= template_asset_path "js/index.js" %>"></script>
 </body>

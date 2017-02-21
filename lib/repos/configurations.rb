@@ -3,7 +3,7 @@ class Escritorio::Repos::Configurations < ROM::Repository[:configurations]
 
   def get_config
     Escritorio::Modules::MemoryCache.fetch_cache(:config) do
-      configurations.one!
+      configurations.as(Escritorio::Models::Configuration).one!
     end
   end
 end

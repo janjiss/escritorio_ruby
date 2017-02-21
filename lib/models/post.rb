@@ -15,6 +15,10 @@ class Escritorio::Models::Post < Dry::Struct
     title
   end
 
+  def meta_description
+    title
+  end
+
   def excerpt
     body
   end
@@ -29,10 +33,6 @@ class Escritorio::Models::Post < Dry::Struct
 
   def date
     Date.today
-  end
-
-  def url
-    "http://google.com"
   end
 
   def author

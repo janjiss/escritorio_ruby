@@ -4,7 +4,7 @@ class Cuba
   module CustomRender
     EXTENSION = "erb"
     LAYOUT    = "default"
-    VIEW_PATH = File.expand_path("content/templates/casper", Dir.pwd)
+    VIEW_PATH = File.expand_path("content/admin", Dir.pwd)
     OPTIONS   = { default_encoding: Encoding.default_external }
 
     def self.setup(app)
@@ -20,10 +20,10 @@ class Cuba
     end
 
     def partial(template, locals = {})
-      _render(template_path(template), locals, OPTIONS)
+      _render(path(template), locals, OPTIONS)
     end
 
-    def template_path(template)
+    def path(template)
       return File.join(VIEW_PATH, "#{ template }.#{ EXTENSION }")
     end
 

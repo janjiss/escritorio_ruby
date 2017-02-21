@@ -18,7 +18,6 @@ class Escritorio::Middlewares::Static
   end
 
   def template_asset_path
-    configuration = APP.resolve("repos.configurations").get_config
-    File.join("/", "templates", configuration.template, "assets")
+    File.join("/", "templates", 'casper', "assets")
   end
 end

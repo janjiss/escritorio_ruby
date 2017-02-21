@@ -22,7 +22,16 @@ namespace :db do
 
     APP.resolve('repos.posts').create([post_1, post_2])
 
-    configuration = Escritorio::Models::Configuration.new({template: 'casper'})
+    configuration = Escritorio::Models::Configuration.new(
+      template: 'casper',
+      blog_title: "Welcome to Escritorio",
+      blog_description: "A place where great ideas are born",
+      blog_url: "http://example.com",
+      blog_meta_title: "Welcome to Escritorio",
+      blog_meta_description: "A place where great ideas are born",
+      blog_header_includes: "",
+      blog_footer_includes: ""
+    )
 
     APP.resolve('repos.configurations').create(configuration)
   end

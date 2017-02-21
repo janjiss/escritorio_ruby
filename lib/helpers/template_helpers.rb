@@ -7,4 +7,8 @@ module Escritorio::Helpers::TemplateHelpers
     configuration = APP.resolve("repos.configurations").get_config
     File.join("/", "templates", configuration.template, "assets", url)
   end
+
+  def current_url
+    env["REQUEST_URI"]
+  end
 end
