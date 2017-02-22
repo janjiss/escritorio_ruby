@@ -1,5 +1,5 @@
 require_relative "../helper"
-class ConfigurationsTest < EscritorioConfigurationsTest
+class ConfigurationsTest < EscritorioTest
 
   def run
     Escritorio::Modules::MemoryCache.delete_cache(:config)

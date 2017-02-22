@@ -23,7 +23,7 @@ class MemoryCacheTest < EscritorioTest
   end
 
   def test_update_cache
-    key = "some_key"
+    key   = "some_key"
     value = "some_value"
 
     Escritorio::Modules::MemoryCache.update_cache(key, value)

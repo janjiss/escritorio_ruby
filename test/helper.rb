@@ -13,14 +13,3 @@ class EscritorioTest < Minitest::Test
     res
   end
 end
-
-class EscritorioConfigurationsTest < Minitest::Test
-  def run
-    res = nil
-    APP.resolve("repos.configurations").transaction do
-      res = super
-      raise Sequel::Rollback
-    end
-    res
-  end
-end
