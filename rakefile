@@ -37,3 +37,12 @@ namespace :db do
   end
 end
 
+desc "Run all tests"
+task :test => :"test:all"
+
+namespace :test do
+  desc "Run all tests"
+  task :all do
+    Dir[File.expand_path("test/**/*.rb", __dir__)].each(&Kernel.method(:require))
+  end
+end

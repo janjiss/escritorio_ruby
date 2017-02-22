@@ -5,7 +5,10 @@ oj -v 2.18.1
 cuba -v 3.8.0
 dry-struct -v 0.1.1
 rom -v 3.0.1
-rom-sql -v 1.0.0
-rom-repository -v 1.0.1
+rom-sql -v 1.0.2
+rom-repository -v 1.1.0
 shotgun -v 0.9.2
 dry-container -v 0.6.0
+concurrent-ruby -v 1.0.4
+redcarpet -v 3.4.0
+pry -v 0.10.4

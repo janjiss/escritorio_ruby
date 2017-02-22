@@ -21,4 +21,3 @@ class Escritorio::Middlewares::Static
     File.join("/", "templates", 'casper', "assets")
   end
 end
-
