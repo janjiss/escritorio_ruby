@@ -9,23 +9,23 @@
     "url": "github.com/janjiss/escritorio"
   },
   "dependencies": {
+    "babel-brunch": "^6.1.1",
+    "babel-preset-latest": "^6.22.0",
+    "babel-preset-react": "^6.23.0",
     "brunch": "^2.10.8",
+    "clean-css-brunch": "^2.10.0",
     "copycat-brunch": "^1.1.0",
-    "draft-js": "^0.10.0",
-    "draft-js-editor": "^1.8.13",
+    "css-brunch": "^2.10.0",
+    "draft-js-image-plugin": "^2.0.0-beta1",
+    "draft-js-inline-toolbar-plugin": "^2.0.0-beta6",
+    "draft-js-plugins-editor": "^2.0.0-beta1",
+    "draft-js-side-toolbar-plugin": "^2.0.0-beta6",
     "mobiledoc-kit": "^0.10.14",
-    "react-mobiledoc-editor": "^0.1.0",
-    "showdown": "^1.6.4"
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "uglify-js-brunch": "^2.10.0"
   },
   "devDependencies": {
-    "auto-reload-brunch": "^2",
-    "babel-brunch": "~6.0",
-    "babel-preset-latest": "^6",
-    "babel-preset-react": "~6.22",
-    "clean-css-brunch": "^2.0.0",
-    "css-brunch": "^2.0.0",
-    "react": "^15.4",
-    "react-dom": "^15.4",
-    "uglify-js-brunch": "^2"
+    "auto-reload-brunch": "^2"
   }
 }
