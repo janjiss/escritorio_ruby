@@ -243,6 +243,19 @@ pre {
   margin-right: 10px;
 }
 
+.editor-image {
+  width: 100%;
+}
+
+.editor-image img {
+  width: 100%;
+}
+
+figure {
+  margin: 0px;
+  padding: 0px;
+}
+
 .draftJsToolbar__buttonWrapper__1Dmqh {
   display: inline-block;
 }

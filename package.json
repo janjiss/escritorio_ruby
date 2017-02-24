@@ -16,11 +16,7 @@
     "clean-css-brunch": "^2.10.0",
     "copycat-brunch": "^1.1.0",
     "css-brunch": "^2.10.0",
-    "draft-js-image-plugin": "^2.0.0-beta1",
-    "draft-js-inline-toolbar-plugin": "^2.0.0-beta6",
-    "draft-js-plugins-editor": "^2.0.0-beta1",
-    "draft-js-side-toolbar-plugin": "^2.0.0-beta6",
-    "mobiledoc-kit": "^0.10.14",
+    "draft-js": "^0.10.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "uglify-js-brunch": "^2.10.0"

@@ -11,7 +11,10 @@ exports.paths = {
 }
 
 exports.plugins = {
-  babel: { presets: ['latest', 'react'] },
+  babel: {
+    presets: ['latest', 'react'],
+    pattern: /\.(es6|jsx)$/
+  },
   copycat:{
     "assets/images": ["static/images"],
     verbose : true, //shows each file that is copied to the destination directory 
