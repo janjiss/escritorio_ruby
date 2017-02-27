@@ -15,9 +15,7 @@ const schema = {
       const isFocused = state.selection.hasEdgeIn(node)
       const src = node.data.get('src')
       const className = isFocused ? 'active' : null
-      return (
-        <img style={{width: "100%"}} src={src} className={className} {...props.attributes} />
-        )
+      return (<img style={{width: "100%"}} src={src} className={className} {...props.attributes} />)
     },
     'paragraph': (props) => { return <p {...props.attributes}>{props.children}</p> },
     'code-block': (props) => { return <pre {...props.attributes}>{props.children}</pre> },
@@ -116,7 +114,7 @@ class EscritorioEditor extends Component {
             <ul>
               {INLINE_TYPES.map((buttonProps) =>
                 <li key={buttonProps.type}>
-                  <BlockButton editorState={this.state.editorState} buttonProps={buttonProps} onChange={this.onChange} />
+                  <InlineButton editorState={this.state.editorState} buttonProps={buttonProps} onChange={this.onChange} />
                 </li>
               )}
               {BLOCKSTYLE_TYPES.map((buttonProps) =>
