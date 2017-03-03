@@ -23,8 +23,8 @@ export default class InlineButton extends Component {
   }
 
   render() {
-    const { type, image, label } = this.buttonProps
-    const display = image ? <img src={image}/> : label
+    const { type, iconClass, label } = this.buttonProps
+    const display = iconClass ? <i className={iconClass} aria-hidden="true"></i> : label
     const onMouseDown = e => this.onClick(e, type)
     return (
       <button onMouseDown={onMouseDown}>

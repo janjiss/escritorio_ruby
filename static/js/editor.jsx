@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { Block, Editor } from 'slate'
+import { Block, Editor, Raw } from 'slate'
 import enterPlugin from './plugins/enterPlugin'
 import backspacePlugin from './plugins/backspacePlugin'
 import BlockButton from './components/BlockButton'
@@ -54,8 +54,7 @@ const schema = {
         },
         normalize: (transform, document) => {
           const block = Block.create(DEFAULT_BLOCK)
-          transform
-            .insertNodeByKey(document.key, 0, block)
+          transform.insertNodeByKey(document.key, 0, block)
         }
     },
     // Rule to insert a paragraph below a void node (the image)
@@ -64,32 +63,31 @@ const schema = {
       match: (node) => {
         return node.kind == 'document'
       },
-        validate: (document) => {
-          const lastNode = document.nodes.last()
-          return lastNode && lastNode.isVoid ? true : null
-        },
-        normalize: (transform, document) => {
-          const block = Block.create(DEFAULT_BLOCK)
-          transform
-            .insertNodeByKey(document.key, document.nodes.size, block)
-        }
+      validate: (document) => {
+        const lastNode = document.nodes.last()
+        return lastNode && lastNode.isVoid ? true : null
+      },
+      normalize: (transform, document) => {
+        const block = Block.create(DEFAULT_BLOCK)
+        transform.insertNodeByKey(document.key, document.nodes.size, block)
+      }
     }
   ]
 }
 const BLOCKSTYLE_TYPES = [
   {label: 'H1', type: 'header-one'},
   {label: 'H2', type: 'header-two'},
-  {label: 'Blockquote', type: 'block-quote', image: '/admin/assets/images/tools/quote.svg'},
-  {label: 'Code', type: 'code-block', image: '/admin/assets/images/tools/file-code-edit.svg'},
-  {label: 'UL', type: 'unordered-list', image: '/admin/assets/images/tools/list-bullets.svg'},
-  {label: 'OL', type: 'ordered-list', image: '/admin/assets/images/tools/list-number.svg'},
+  {label: 'Blockquote', type: 'block-quote', iconClass: 'fa fa-quote-right'},
+  {label: 'Code', type: 'code-block', iconClass: 'fa fa-file-code-o'},
+  {label: 'UL', type: 'unordered-list', iconClass: 'fa fa-list'},
+  {label: 'OL', type: 'ordered-list', iconClass: 'fa fa-list-ol'},
 ]
 
 const INLINE_TYPES = [
-  {label: 'Bold', type: 'bold', image: "/admin/assets/images/tools/bold.svg"},
-  {label: 'Italic', type: 'italic', image: "/admin/assets/images/tools/italic.svg"},
-  {label: 'Underline', type: 'underlined', image: "/admin/assets/images/tools/underline.svg"},
-  {label: 'Monospace', type: 'code', image: "/admin/assets/images/tools/file-code-1.svg"},
+  {label: 'Bold', type: 'bold', iconClass: 'fa fa-bold'},
+  {label: 'Italic', type: 'italic', iconClass: 'fa fa-italic'},
+  {label: 'Underline', type: 'underlined', iconClass: 'fa fa-underline'},
+  {label: 'Monospace', type: 'code', iconClass: 'fa fa-code'},
 ];;
 
 class EscritorioEditor extends Component {
@@ -102,6 +100,7 @@ class EscritorioEditor extends Component {
 
   // On change, update the app's React state with the new editor state.
   _onChange(editorState) {
+    console.log(Raw.serialize(editorState))
     this.setState({ editorState })
   }
 

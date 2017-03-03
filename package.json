@@ -18,7 +18,7 @@
     "css-brunch": "^2.10.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "slate": "^0.16.28",
+    "slate": "^0.18.0",
     "uglify-js-brunch": "^2.10.0"
   },
   "devDependencies": {

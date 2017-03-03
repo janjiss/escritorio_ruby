@@ -83,7 +83,6 @@ pre {
   transition: margin-left 0.1s;
 }
 
-
 .toolbar-block ul {
   list-style: none;
   margin: 0;
@@ -94,7 +93,6 @@ pre {
   margin:0;
   overflow:hidden;
   opacity:0.3;
-  padding-top: 6px;
   float:left;
 }
 
@@ -119,8 +117,7 @@ pre {
 
 .toolbar-block ul li button {
   border-radius: 2px;
-  font-size: 10px;
-  line-height: 15px;
+  font-size: 15px;
   text-transform: uppercase;
   padding:0;
   margin:0;
@@ -166,8 +163,9 @@ pre {
   color: #FFF;
   -webkit-animation: fade-in 0.333s;
   animation: fade-in 0.333s;
-
+  font-size: 10px;
 }
+
 .toolbar-block ul li button:hover label:before {
   content: '';
   position: absolute;

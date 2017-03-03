@@ -12,17 +12,17 @@ export default class ImageControl extends Component {
   _addImage(file) {
     const reader = new FileReader();
     reader.onloadend = () => {
-      const newState = this.props.editorState
-        .transform()
-        .insertBlock({
-          type: 'image',
-          isVoid: true,
-          data: { src: reader.result }
-        })
-      .focus()
-        .apply()
-
-      this.onChange(newState)
+      this.onChange(
+        this.props.editorState
+          .transform()
+          .insertBlock({
+            type: 'image',
+            isVoid: true,
+            data: { src: reader.result }
+          })
+          .focus()
+          .apply()
+      )
     }
     reader.readAsDataURL(file)
   }
@@ -41,7 +41,7 @@ export default class ImageControl extends Component {
     <span>
       <input type="file" ref="fileField" value={this.state.value} style={{display: "none"}} onChange={this.onFileSelected} />
       <button onMouseDown={this.onClick}>
-        <img src="/admin/assets/images/tools/file-picture-add.svg" />
+        <i className="fa fa-file-image-o" aria-hidden="true"></i>
         <label>Upload Image</label>
       </button>
     </span>

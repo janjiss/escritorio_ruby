@@ -19,8 +19,8 @@ export default class BlockButton extends Component {
     e.preventDefault()
     const { editorState } = this.props
     const { type } = this.buttonProps
-    const transform = editorState.transform()
     const { document } = editorState
+    const transform = editorState.transform()
 
     // Handle everything but list buttons.
     if (type != 'unordered-list' && type != 'ordered-list') {
@@ -67,8 +67,8 @@ export default class BlockButton extends Component {
   }
 
   render() {
-    const { type, image, label } = this.buttonProps
-    const display = image ? <img src={image}/> : label
+    const { type, iconClass, label } = this.buttonProps
+    const display = iconClass ? <i className={iconClass} aria-hidden="true"></i> : label
     const onMouseDown = e => this.onClick(e, type)
     return (
       <button onMouseDown={onMouseDown}>
