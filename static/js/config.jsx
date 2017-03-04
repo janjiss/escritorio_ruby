@@ -1,7 +1,6 @@
 import { Raw } from 'slate'
 const DEFAULT_NODE = 'paragraph'
 
-
 // TODO: Implement these as keys everywhere
 const BLOCK_TYPES = {
   PARAGRAPH: 'paragraph',

@@ -6,6 +6,7 @@ import backspacePlugin from './plugins/backspacePlugin'
 import BlockButton from './components/BlockButton'
 import InlineButton from './components/InlineButton'
 import ImageButton from './components/ImageButton'
+import SoftBreak from 'slate-soft-break'
 import { DEFAULT_NODE, DEFAULT_BLOCK, INITIAL_STATE } from './config'
 
 const schema = {
@@ -20,7 +21,6 @@ const schema = {
     'paragraph': (props) => { return <p {...props.attributes}>{props.children}</p> },
     'code-block': (props) => { return <pre {...props.attributes}>{props.children}</pre> },
     'block-quote': (props) => { return <blockquote {...props.attributes}>{props.children}</blockquote> },
-    'bulleted-list': (props) => { return <ul {...props.attributes}>{props.children}</ul> },
     'header-one': (props) => { return <h1 {...props.attributes}>{props.children}</h1> },
     'header-two': (props) => { return <h2 {...props.attributes}>{props.children}</h2> },
     'list-item': (props) => { return <li {...props.attributes}>{props.children}</li> },
@@ -65,7 +65,7 @@ const schema = {
       },
       validate: (document) => {
         const lastNode = document.nodes.last()
-        return lastNode && lastNode.isVoid ? true : null
+        return lastNode && lastNode.type == DEFAULT_BLOCK.type ? null : true
       },
       normalize: (transform, document) => {
         const block = Block.create(DEFAULT_BLOCK)
@@ -100,7 +100,6 @@ class EscritorioEditor extends Component {
 
   // On change, update the app's React state with the new editor state.
   _onChange(editorState) {
-    console.log(Raw.serialize(editorState))
     this.setState({ editorState })
   }
 
@@ -130,7 +129,7 @@ class EscritorioEditor extends Component {
         <div className="editable">
           <Editor
             schema={schema}
-            plugins={[backspacePlugin(), enterPlugin()]}
+            plugins={[backspacePlugin(), enterPlugin(), SoftBreak({ onlyIn: ['code-block'] })]}
             state={this.state.editorState}
             onChange={this.onChange}
             focus={this.focus}
@@ -140,7 +139,6 @@ class EscritorioEditor extends Component {
     )
   }
 }
-
 
 ReactDOM.render(
   <EscritorioEditor />,
