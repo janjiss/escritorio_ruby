@@ -3,7 +3,8 @@ class Escritorio::Models::Post < Dry::Struct
 
   attribute :id, Types::Strict::Int.optional
   attribute :title, Types::Strict::String
-  attribute :body_md, Types::Strict::String
+  attribute :raw, Types::Strict::String
+  attribute :body, Types::Strict::String
   attribute :created_at, Types::DateTime.default { DateTime.now }
   attribute :updated_at, Types::DateTime.default { DateTime.now }
 
@@ -25,10 +26,6 @@ class Escritorio::Models::Post < Dry::Struct
 
   def content
     body
-  end
-
-  def body
-    Markdown.new(body_md).to_html
   end
 
   def date

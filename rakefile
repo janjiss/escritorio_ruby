@@ -10,18 +10,6 @@ namespace :db do
   end
 
   task :seed do
-    post_1 = Escritorio::Models::Post.new(
-      title: "The problem with dependency injection",
-      body_md: ContentFixtures.content_1,
-    )
-
-    post_2 = Escritorio::Models::Post.new(
-      title: "5 less used Enumerators of Ruby",
-      body_md: ContentFixtures.content_2,
-    )
-
-    APP.resolve('repos.posts').create([post_1, post_2])
-
     configuration = Escritorio::Models::Configuration.new(
       template: 'casper',
       blog_title: "Welcome to Escritorio",

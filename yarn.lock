@@ -2928,6 +2928,10 @@ slate:
     react-portal "^3.0.0"
     type-of "^2.0.1"
 
+slate-soft-break@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/slate-soft-break/-/slate-soft-break-0.3.0.tgz#3d28dea9e0aa4783ddcea785ff5db7277214d65f"
+
 sntp@1.x.x:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/sntp/-/sntp-1.0.9.tgz#6541184cc90aeea6c6e7b35e2659082443c66198"

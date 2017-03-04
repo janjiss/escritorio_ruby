@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { Block, Editor, Raw } from 'slate'
+import { Block, Editor, Raw, Html, Plain } from 'slate'
 import enterPlugin from './plugins/enterPlugin'
 import backspacePlugin from './plugins/backspacePlugin'
 import BlockButton from './components/BlockButton'
 import InlineButton from './components/InlineButton'
 import ImageButton from './components/ImageButton'
 import SoftBreak from 'slate-soft-break'
+import Escritorio from './api/escritorio'
 import { DEFAULT_NODE, DEFAULT_BLOCK, INITIAL_STATE } from './config'
+
+const Api = new Escritorio
 
 const schema = {
   nodes: {
@@ -96,11 +99,22 @@ class EscritorioEditor extends Component {
     this.state = {editorState: INITIAL_STATE}
     this.onChange = (editorState) => this._onChange(editorState)
     this.addImage = (state, src) => this._addImage(state, src)
+    this.onDocumentChange = (document, state) => this._onDocumentChange(document, state)
+  }
+
+  componentDidMount() {
+    Api.fetch((editorState) => {
+      this.onChange(editorState)
+    })
   }
 
   // On change, update the app's React state with the new editor state.
   _onChange(editorState) {
     this.setState({ editorState })
+  }
+
+  _onDocumentChange(document, state) {
+    Api.update(state)
   }
 
   // Render the editor.
@@ -132,6 +146,7 @@ class EscritorioEditor extends Component {
             plugins={[backspacePlugin(), enterPlugin(), SoftBreak({ onlyIn: ['code-block'] })]}
             state={this.state.editorState}
             onChange={this.onChange}
+            onDocumentChange={this.onDocumentChange}
             focus={this.focus}
           />
         </div> 

@@ -1,5 +1,5 @@
 class Escritorio::Repos::Posts < ROM::Repository[:posts]
-  commands :create
+  commands :create, update: :by_pk
 
   def by_id(id)
     posts.as(Escritorio::Models::Post).by_pk(id).one!
