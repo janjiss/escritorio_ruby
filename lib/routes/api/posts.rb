@@ -2,9 +2,8 @@ class Escritorio::Routes::Api::Posts < Cuba
   define do
     on root do
       on post do
-        json = Oj.load(req.params["json"])
-        json[:raw] = Oj.dump(json[:raw])
-        post = APP["repos.posts"].create(Escritorio::Models::Post.new(json))
+        req.params[:raw] = Oj.dump(req.params[:raw])
+        post = APP["repos.posts"].create(Escritorio::Models::Post.new(req.params))
         res.write Oj.dump({ id: post.id })
       end
     end
@@ -17,9 +16,8 @@ class Escritorio::Routes::Api::Posts < Cuba
       end
 
       on put do
-        json = Oj.load(req.params["json"])
-        json[:raw] = Oj.dump(json[:raw])
-        post = Escritorio::Models::Post.new(json.merge(id: id.to_i))
+        req.params[:raw] = Oj.dump(req.params[:raw])
+        post = Escritorio::Models::Post.new(req.params.merge(id: id.to_i))
         APP["repos.posts"].update(id.to_i, post)
         res.write Oj.dump({ status: "ok" })
       end

@@ -12,7 +12,16 @@ export default class BlockButton extends Component {
 
   _hasBlock(type) {
     const { editorState } = this.props
-    return editorState.blocks.some(node => node.type == type)
+
+    const hasParentOfType = editorState.blocks.some((block) => {
+      return !!editorState.document.getClosest(block.key, parent => parent.type == type)
+    })
+
+    const isSameType = editorState.blocks.some((block) => {
+      return editorState.blocks.some(block => block.type == type)
+    })
+
+    return hasParentOfType || isSameType
   }
 
   _onClick(e, element) {
@@ -68,13 +77,16 @@ export default class BlockButton extends Component {
 
   render() {
     const { type, iconClass, label } = this.buttonProps
+    const selectedClass = this.hasBlock(type) ? "selected" : ""
     const display = iconClass ? <i className={iconClass} aria-hidden="true"></i> : label
     const onMouseDown = e => this.onClick(e, type)
     return (
-      <button onMouseDown={onMouseDown}>
-        {display}
-        <label>{label}</label>
-      </button>
+      <li className={selectedClass}>
+        <button onMouseDown={onMouseDown}>
+          {display}
+          <label>{label}</label>
+        </button>
+      </li>
     )
   }
 }

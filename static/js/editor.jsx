@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { Block, Editor, Raw, Html, Plain } from 'slate'
+import Portal from 'react-portal'
+import { Block, Editor, Raw, Html, Plain, Placeholder } from 'slate'
 import enterPlugin from './plugins/enterPlugin'
 import backspacePlugin from './plugins/backspacePlugin'
 import onSavePlugin from './plugins/onSavePlugin'
@@ -63,6 +64,19 @@ const schema = {
           transform.insertNodeByKey(document.key, 0, block)
         }
     },
+    // Rule to always have first block as header-one element
+    {
+      match: (node) => {
+        return node.kind == 'document'
+      },
+      validate: (document) => {
+        const firstNode = document.nodes.first()
+        return firstNode && firstNode.type == 'header-one' ? null : true
+      },
+      normalize: (transform, document) => {
+        transform.setBlock({type: 'header-one'})
+      }
+    },
     // Rule to insert a paragraph below a void node (the image)
     // if that node is the last one in the document
     {
@@ -80,6 +94,7 @@ const schema = {
     }
   ]
 }
+
 const BLOCKSTYLE_TYPES = [
   {label: 'H1', type: 'header-one'},
   {label: 'H2', type: 'header-two'},
@@ -100,12 +115,10 @@ class EscritorioEditor extends Component {
   constructor(props) {
     super(props)
     const postId = editorElement.dataset.postId.length <= 0 ? null : editorElement.dataset.postId
-    console.log(postId)
 
-    this.state = { editorState: INITIAL_STATE, title: "", postId: postId }
+    this.state = { editorState: INITIAL_STATE, postId: postId }
     this.onChange = (editorState) => this._onChange(editorState)
     this.addImage = (state, src) => this._addImage(state, src)
-    this.onChangeTitle = (e) => this._onChangeTitle(e)
     this.onSave = () => this._onSave()
   }
 
@@ -113,8 +126,7 @@ class EscritorioEditor extends Component {
     if(this.state.postId) {
       Api.fetch(editorElement.dataset.postId, (editorState, post) => {
         this.setState({
-          editorState: editorState,
-          title: post.title
+          editorState: editorState
         })
         this.onChange(editorState)
       })
@@ -128,17 +140,13 @@ class EscritorioEditor extends Component {
 
   _onSave() {
     if (!this.state.postId) {
-      Api.create(this.state.editorState, this.state.title, (postId) => {
+      Api.create(this.state.editorState, (postId) => {
         window.history.replaceState('Post', 'Hello', `/admin/posts/${postId}`);
         this.setState({postId: postId})
       })
     } else {
-      Api.update(this.state.editorState, this.state.title)
+      Api.update(this.state.editorState)
     }
-  }
-
-  _onChangeTitle(e) {
-    this.setState({title: e.target.value})
   }
 
   // Render the editor.
@@ -149,14 +157,10 @@ class EscritorioEditor extends Component {
           <div className="toolbar-block">
             <ul>
               {INLINE_TYPES.map((buttonProps) =>
-                <li key={buttonProps.type}>
-                  <InlineButton editorState={this.state.editorState} buttonProps={buttonProps} onChange={this.onChange} />
-                </li>
+                <InlineButton editorState={this.state.editorState} buttonProps={buttonProps} onChange={this.onChange} key={buttonProps.type} />
               )}
               {BLOCKSTYLE_TYPES.map((buttonProps) =>
-                <li key={buttonProps.type}>
-                  <BlockButton editorState={this.state.editorState} buttonProps={buttonProps} onChange={this.onChange} />
-                </li>
+                <BlockButton editorState={this.state.editorState} buttonProps={buttonProps} onChange={this.onChange} key={buttonProps.type} />
               )}
               <li className="image-upload">
                 <ImageButton editorState={this.state.editorState} onChange={this.onChange} />
@@ -165,15 +169,14 @@ class EscritorioEditor extends Component {
           </div>
         </div>
         <div className="editable">
-          <input className="edit-title" type="text" placeholder="It's time to tell my story" value={this.state.title} onChange={this.onChangeTitle} ></input>
-
           <Editor
             schema={schema}
             plugins={[backspacePlugin(), enterPlugin(), SoftBreak({ onlyIn: ['code-block'] }), onSavePlugin(this.onSave)]}
             state={this.state.editorState}
             onChange={this.onChange}
             focus={this.focus}
-          />
+          >
+          </Editor>
         </div> 
       </div>
     )

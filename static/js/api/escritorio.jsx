@@ -1,4 +1,4 @@
-import { Raw, Html } from 'slate'
+import { Raw, Html, Plain, State } from 'slate'
 import React from 'react'
 
 const SERIALIZE_RULES = [
@@ -34,6 +34,10 @@ const SERIALIZE_RULES = [
 const HTMLSerializer = new Html({ rules: SERIALIZE_RULES })
 
 export default class Escritorio {
+  constructor() {
+    this.prepData = (state) => this._prepData(state)
+  }
+
   fetch(id, onSuccess) {
     fetch(`/api/posts/${id}`)
       .then((response) => {
@@ -47,20 +51,8 @@ export default class Escritorio {
       })
   }
 
-  create(state, title, onSuccess) {
-    const raw = Raw.serialize(state: state)
-    const body = HTMLSerializer.serialize(state: state)
-
-    const payload = {
-      title: title,
-      raw: raw,
-      body: body
-    };
-
-    const data = new FormData();
-    data.append( "json", JSON.stringify( payload ) );
-
-    fetch('/api/posts', {method: "POST", body: data})
+  create(state, onSuccess) {
+    fetch('/api/posts', { method: "POST", headers: { "Content-Type": "application/json" }, body: this.prepData(state) })
       .then((response) => {
         if(response.ok) {
           return response.json()
@@ -71,25 +63,33 @@ export default class Escritorio {
       })
   }
 
-  update(state, title) {
-    const raw = Raw.serialize(state: state)
-    const body = HTMLSerializer.serialize(state: state)
-
-    const payload = {
-      title: title,
-      raw: raw,
-      body: body
-    };
-
-    const data = new FormData();
-    data.append( "json", JSON.stringify( payload ) );
-
-    fetch('/api/posts/1', {method: "PUT", body: data})
+  update(state) {
+    fetch('/api/posts/1', { method: "PUT", headers: { "Content-Type": "application/json" }, body: this.prepData(state) })
       .then((response) => {
         if(response.ok) {
           return response.json()
         }
       })
+  }
+
+  _prepData(state) {
+    const title = state.document.nodes.first()
+    const excerpt = state.document.nodes.get(1)
+    const updatedState = state.transform()
+      .removeNodeByKey(title.key)
+      .apply()
+
+    const raw = Raw.serialize(state)
+    const body = HTMLSerializer.serialize(updatedState)
+
+    const payload = {
+      title: title.text,
+      raw: raw,
+      body: body,
+      excerpt: excerpt ? excerpt.text : ""
+    };
+
+    return JSON.stringify(payload)
   }
 }
 

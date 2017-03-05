@@ -24,13 +24,16 @@ export default class InlineButton extends Component {
 
   render() {
     const { type, iconClass, label } = this.buttonProps
+    const selectedClass = this.props.editorState.marks.some(mark => mark.type == type) ? "selected" : ""
     const display = iconClass ? <i className={iconClass} aria-hidden="true"></i> : label
     const onMouseDown = e => this.onClick(e, type)
     return (
-      <button onMouseDown={onMouseDown}>
-        {display}
-        <label>{label}</label>
-      </button>
+      <li key={type} className={selectedClass}>
+        <button onMouseDown={onMouseDown}>
+          {display}
+          <label>{label}</label>
+        </button>
+      </li>
     )
   }
 }

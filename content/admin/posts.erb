@@ -1,9 +1,12 @@
 <div class="uk-container uk-container-small">
+  <div></div>
+
   <header class="">
     <h1 class="uk-align-left">Your stories</h1>
     <a class="uk-button uk-button-default uk-align-right" href="/admin/posts/new">Write a story</a>
     <div class="uk-clearfix"></div>
   </header>
+  <hr/>
 
   <% posts.each do |post| %>
     <article class="uk-article">
@@ -11,9 +14,7 @@
 
       <p class="uk-article-meta">Written by <a href="#"><%= post.author.name %></a> on <%= post.created_at  %> </p>
 
-      <p class="uk-text-lead"><%= post.excerpt %></p>
-
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+      <p><%= post.excerpt %></p>
 
       <div class="uk-grid-small uk-child-width-auto" uk-grid>
         <div>
@@ -21,5 +22,7 @@
         </div>
       </div>
     </article>
+
+    <hr/>
   <% end %>
 </div>

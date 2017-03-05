@@ -8,6 +8,7 @@ require "rom"
 require "rom-sql"
 require "rom-repository"
 require "redcarpet"
+require "rack/parser"
 
 APP_DIR = Dir.pwd
 WEBAPP_DIR = File.join(APP_DIR, "lib")
