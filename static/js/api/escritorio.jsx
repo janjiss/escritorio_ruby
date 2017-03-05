@@ -34,24 +34,49 @@ const SERIALIZE_RULES = [
 const HTMLSerializer = new Html({ rules: SERIALIZE_RULES })
 
 export default class Escritorio {
-  fetch(onSuccess) {
-    fetch('/api/posts/1')
+  fetch(id, onSuccess) {
+    fetch(`/api/posts/${id}`)
       .then((response) => {
         if(response.ok) {
           return response.json()
         }
       })
-      .then((response) => {
-        const editorState = Raw.deserialize(JSON.parse(response.raw), { terse: true })
-        onSuccess(editorState)
+      .then((post) => {
+        const editorState = Raw.deserialize(JSON.parse(post.raw), { terse: true })
+        onSuccess(editorState, post)
       })
   }
-  update(state) {
+
+  create(state, title, onSuccess) {
     const raw = Raw.serialize(state: state)
     const body = HTMLSerializer.serialize(state: state)
 
     const payload = {
-      title: "Hello World",
+      title: title,
+      raw: raw,
+      body: body
+    };
+
+    const data = new FormData();
+    data.append( "json", JSON.stringify( payload ) );
+
+    fetch('/api/posts', {method: "POST", body: data})
+      .then((response) => {
+        if(response.ok) {
+          return response.json()
+        }
+      })
+      .then((post) => {
+        onSuccess(post.id)
+      })
+  }
+
+  update(state, title) {
+    const raw = Raw.serialize(state: state)
+    const body = HTMLSerializer.serialize(state: state)
+
+    const payload = {
+      title: title,
       raw: raw,
       body: body
     };

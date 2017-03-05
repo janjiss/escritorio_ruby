@@ -1,3 +1,24 @@
-<div id="editor">
-</div>
-<script>require("static/js/editor.jsx")</script>
+<nav class="side-nav">
+  <ul>
+    <li><a href="/admin/posts/new">New Post</a></li>
+    <li><a href="/admin/posts">Content</a></li>
+  </ul>
+
+  <ul>
+    <li>Settings</li>
+  </ul>
+</nav>
+
+<section>
+  <% posts.each do |post| %>
+    <div>
+      <%= post.title %>
+      <a href="<%= "/admin/posts/#{post.id}" %>">Edit</a>
+
+      <form action="<%= "/admin/posts/#{post.id}" %>" method="POST">
+        <input type="hidden" name="_method" value="DELETE"/>
+        <input type="submit" value="Delete"></input>
+      </form>
+    </div>
+  <% end %>
+</section>

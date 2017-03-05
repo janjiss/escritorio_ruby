@@ -2,7 +2,10 @@ class Escritorio::Routes::Api::Posts < Cuba
   define do
     on root do
       on post do
-        Escritorio::Models::Post.new(req.params)
+        json = Oj.load(req.params["json"])
+        json[:raw] = Oj.dump(json[:raw])
+        post = APP["repos.posts"].create(Escritorio::Models::Post.new(json))
+        res.write Oj.dump({ id: post.id })
       end
     end
 

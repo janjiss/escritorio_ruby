@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { Block, Editor, Raw, Html, Plain } from 'slate'
 import enterPlugin from './plugins/enterPlugin'
 import backspacePlugin from './plugins/backspacePlugin'
+import onSavePlugin from './plugins/onSavePlugin'
 import BlockButton from './components/BlockButton'
 import InlineButton from './components/InlineButton'
 import ImageButton from './components/ImageButton'
@@ -11,6 +12,8 @@ import Escritorio from './api/escritorio'
 import { DEFAULT_NODE, DEFAULT_BLOCK, INITIAL_STATE } from './config'
 
 const Api = new Escritorio
+
+const editorElement = document.getElementById('editor')
 
 const schema = {
   nodes: {
@@ -91,21 +94,31 @@ const INLINE_TYPES = [
   {label: 'Italic', type: 'italic', iconClass: 'fa fa-italic'},
   {label: 'Underline', type: 'underlined', iconClass: 'fa fa-underline'},
   {label: 'Monospace', type: 'code', iconClass: 'fa fa-code'},
-];;
+]
 
 class EscritorioEditor extends Component {
   constructor(props) {
     super(props)
-    this.state = {editorState: INITIAL_STATE}
+    const postId = editorElement.dataset.postId.length <= 0 ? null : editorElement.dataset.postId
+    console.log(postId)
+
+    this.state = { editorState: INITIAL_STATE, title: "", postId: postId }
     this.onChange = (editorState) => this._onChange(editorState)
     this.addImage = (state, src) => this._addImage(state, src)
-    this.onDocumentChange = (document, state) => this._onDocumentChange(document, state)
+    this.onChangeTitle = (e) => this._onChangeTitle(e)
+    this.onSave = () => this._onSave()
   }
 
   componentDidMount() {
-    Api.fetch((editorState) => {
-      this.onChange(editorState)
-    })
+    if(this.state.postId) {
+      Api.fetch(editorElement.dataset.postId, (editorState, post) => {
+        this.setState({
+          editorState: editorState,
+          title: post.title
+        })
+        this.onChange(editorState)
+      })
+    }
   }
 
   // On change, update the app's React state with the new editor state.
@@ -113,8 +126,19 @@ class EscritorioEditor extends Component {
     this.setState({ editorState })
   }
 
-  _onDocumentChange(document, state) {
-    Api.update(state)
+  _onSave() {
+    if (!this.state.postId) {
+      Api.create(this.state.editorState, this.state.title, (postId) => {
+        window.history.replaceState('Post', 'Hello', `/admin/posts/${postId}`);
+        this.setState({postId: postId})
+      })
+    } else {
+      Api.update(this.state.editorState, this.state.title)
+    }
+  }
+
+  _onChangeTitle(e) {
+    this.setState({title: e.target.value})
   }
 
   // Render the editor.
@@ -141,12 +165,13 @@ class EscritorioEditor extends Component {
           </div>
         </div>
         <div className="editable">
+          <input className="edit-title" type="text" placeholder="It's time to tell my story" value={this.state.title} onChange={this.onChangeTitle} ></input>
+
           <Editor
             schema={schema}
-            plugins={[backspacePlugin(), enterPlugin(), SoftBreak({ onlyIn: ['code-block'] })]}
+            plugins={[backspacePlugin(), enterPlugin(), SoftBreak({ onlyIn: ['code-block'] }), onSavePlugin(this.onSave)]}
             state={this.state.editorState}
             onChange={this.onChange}
-            onDocumentChange={this.onDocumentChange}
             focus={this.focus}
           />
         </div> 
@@ -157,5 +182,5 @@ class EscritorioEditor extends Component {
 
 ReactDOM.render(
   <EscritorioEditor />,
-  document.getElementById('editor')
+  editorElement
 );

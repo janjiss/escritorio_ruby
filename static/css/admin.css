@@ -30,7 +30,8 @@ h3 {
 }
 
 p {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+  line-height: 20px;
   font-size: 18px;
 }
 
@@ -213,30 +214,12 @@ pre {
   margin-right: auto;
   width: 65%;
 }
-.placeholder {
-  position: absolute;
-}
 
-.button-xsmall {
-  font-size: 70%;
-}
-
-.button-small {
-  font-size: 85%;
-}
-
-.button-large {
-  font-size: 110%;
-}
-
-.button-xlarge {
-  font-size: 125%;
-}
-
-.save-button {
-  float: right;
-  margin-top: 5px;
-  margin-right: 10px;
+.editable .edit-title {
+  width: 100%;
+  font-size: 40px;
+  line-height: 48px;
+  border-style: none;
 }
 
 .editor-image {
@@ -254,4 +237,9 @@ figure {
 
 img.active {
   box-shadow: 0 0 0 2px blue;
+}
+
+/* Side navigation */
+
+.side-nav {
 }
