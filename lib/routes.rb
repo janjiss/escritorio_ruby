@@ -7,6 +7,10 @@ module Escritorio
         run Escritorio::Routes::Admin
       end
 
+      on "api" do
+        run Escritorio::Routes::Api
+      end
+
       on default do
         run Escritorio::Routes::Public
       end

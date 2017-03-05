@@ -6,14 +6,12 @@
 
     <meta name="HandheldFriendly" content="True" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/pure-min.css" integrity="sha384-UQiGfs9ICog+LwheBSRCt1o5cbyKIHbwjWscjemyBMT9YCUMZffs6UqUTd0hObXD" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.16/css/uikit.min.css" />
     <link rel="stylesheet" type="text/css" href="<%= asset_path "css/admin.css" %>" />
-
+    <script src="https://use.fontawesome.com/9cb8c2f6e6.js"></script>
+    <script type="text/javascript" src="<%= asset_path "js/admin.js" %>"></script>
 </head>
 <body>
   <%= content %>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
-  <script type="text/javascript" src="<%= asset_path "js/admin.js" %>"></script>
-  <script>require("static/js/admin.jsx")</script>
 </body>
 </html>
