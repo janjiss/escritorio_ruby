@@ -1,24 +1,27 @@
-<nav class="side-nav">
-  <ul>
-    <li><a href="/admin/posts/new">New Post</a></li>
-    <li><a href="/admin/posts">Content</a></li>
-  </ul>
+<div class="ui left fixed vertical menu">
+  <a class="item" href="/admin/posts/new"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> New Post</a>
+  <a class="item" href="/admin/posts"><i class="fa fa-file-text-o" aria-hidden="true"></i> Content</a>
+  <a class="item" href="javascript:"><i class="fa fa-wrench" aria-hidden="true"></i> Settings</a>
+</div>
 
-  <ul>
-    <li>Settings</li>
-  </ul>
-</nav>
-
-<section>
+<section class="ui items divided" style="margin-left: 16rem; margin-right: 1rem">
   <% posts.each do |post| %>
-    <div>
-      <%= post.title %>
-      <a href="<%= "/admin/posts/#{post.id}" %>">Edit</a>
+    <div class="item">
+      <div class="content">
+        <div class="header"><%= post.title %></div>
+        <div class="description">
+          <%= post.title %>
+        </div>
+        <div class="meta">
+          <span>By: <%= post.author.name %></span>
+        </div>
 
-      <form action="<%= "/admin/posts/#{post.id}" %>" method="POST">
-        <input type="hidden" name="_method" value="DELETE"/>
-        <input type="submit" value="Delete"></input>
-      </form>
+        <div class="extra">
+          <div class="ui right floated button">
+            <a href="/admin/posts/<%= post.id %>">Edit</a>
+          </div>
+        </div>
+      </div>
     </div>
   <% end %>
 </section>

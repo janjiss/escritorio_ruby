@@ -1,72 +1,6 @@
-*:focus {
-  outline: none;
-}
-
-body {
-  margin: 0px;
-  padding; 0px;
-  font-family: Helvetica, Arial, sans-serif;
-  font-size: 22px;
-  line-height: 30px;
-}
-
-h1 {
-  font-size: 40px;
-  font-weight: bold;
-  line-height: 50px;;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  letter-spacing: -2px;
-}
-
-h2 {
-  font-size: 28px;
-  line-height: 42px;
-}
-
-h3 {
-  font-size: 22px;
-  line-height: 32px;
-}
-
-p {
-  margin-bottom: 5px;
-  line-height: 20px;
-  font-size: 18px;
-}
-
-a {
-  color:black;
-}
-
-a:hover {
-  color:green;
-}
-
 blockquote {
-  display: block;
   padding-left: 20px;
   border-left: 6px solid #df0d32;
-  margin-left: -15px;
-  padding-left: 15px;
-  font-style: italic;
-  color: #555;
-}
-
-pre {
-  margin: 0 0 0 0;
-  background-color: rgba(0, 0, 0, 0.05);
-  font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
-  font-size: 16px;
-  line-height: 18px;
-}
-
-.editable
-{
-  outline: none;
-  margin: 0 0 20px 0;
-  padding: 0 0 20px 0;
-  border-bottom: 1px solid #dbdbdb;
 }
 
 .toolbar-wrapper {
@@ -181,28 +115,6 @@ pre {
   border-right: 10px solid transparent;
 }
 
-.clearfix {
-  clear: both;
-}
-
-#title {
-  overflow: auto;
-  resize: none;
-  border: 0;
-  width: 100%;
-  font-size: 36px;
-  line-height: 40px;
-  font-size: 36px;
-  font-weight: bold;
-  line-height: 50px;;
-  margin-left: auto;
-  margin-right: auto;
-  width: 65%;
-  margin-top: 60px;
-}
-
-/* */
-
 .editor {
   margin-left: auto;
   margin-right: auto;
@@ -237,9 +149,4 @@ figure {
 
 img.active {
   box-shadow: 0 0 0 2px blue;
-}
-
-/* Side navigation */
-
-.side-nav {
 }
