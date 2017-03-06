@@ -10,11 +10,12 @@ require "rom-repository"
 require "redcarpet"
 require "rack/parser"
 
-APP_DIR = File.expand_path('../', __dir__)
-WEBAPP_DIR = File.join(APP_DIR, "lib")
-$LOAD_PATH.unshift(WEBAPP_DIR)
+DB_PATH      = File.join("sqlite://", "db", "escritorio")
+APP_DIR      = File.expand_path('../', __dir__)
+WEBAPP_DIR   = File.join(APP_DIR, "lib")
+UPLOADS_PATH = File.join(APP_DIR, "public", "uploads")
 
-DB_PATH = File.join("sqlite://", "db", "escritorio")
+$LOAD_PATH.unshift(WEBAPP_DIR)
 
 module Types
   include Dry::Types.module

@@ -2,6 +2,8 @@ require_relative  "./lib/common"
 
 Cuba.plugin Cuba::CustomRender
 Cuba.plugin Cuba::TemplateRender
+
+Cuba.plugin Escritorio::Helpers::Api
 Cuba.plugin Escritorio::Helpers::TemplateHelpers
 
 json_load_object = ->(data) {
