@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
+import Escritorio from '../api/escritorio'
+const Api = new Escritorio
+
 export default class ImageControl extends Component {
   constructor(props) {
     super(props)
     this.state = { value: "" }
+    this.getLatestState = this.props.getLatestState
     this.onClick = () => { this._onClick() }
     this.onFileSelected = (e) => { this._onFileSelected(e) }
     this.onChange = this.props.onChange
@@ -12,17 +16,32 @@ export default class ImageControl extends Component {
   _addImage(file) {
     const reader = new FileReader();
     reader.onloadend = () => {
-      this.onChange(
-        this.props.editorState
-          .transform()
-          .insertBlock({
-            type: 'image',
-            isVoid: true,
-            data: { src: reader.result }
-          })
-          .focus()
+
+      const getLatestState = this.getLatestState
+      const stateWithTemporaryImage = getLatestState().transform()
+        .insertBlock({
+          type: 'image',
+          isVoid: true,
+          data: {
+            src: reader.result,
+            inProgress: true
+          }
+        })
+        .focus()
+        .apply()
+
+      const imageKey = stateWithTemporaryImage.focusBlock.key
+
+      this.onChange(stateWithTemporaryImage)
+
+      Api.upload(file, this.props.postId, (result) => {
+        const src = result.file
+        const stateWithFinalImage = getLatestState().transform()
+          .setNodeByKey(imageKey, { data: { src: src, inProgress: false } })
           .apply()
-      )
+
+        this.onChange(stateWithFinalImage)
+      })
     }
     reader.readAsDataURL(file)
   }

@@ -10,7 +10,7 @@ require "rom-repository"
 require "redcarpet"
 require "rack/parser"
 
-APP_DIR = Dir.pwd
+APP_DIR = File.expand_path('../', __dir__)
 WEBAPP_DIR = File.join(APP_DIR, "lib")
 $LOAD_PATH.unshift(WEBAPP_DIR)
 

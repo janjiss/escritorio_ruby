@@ -63,12 +63,26 @@ export default class Escritorio {
       })
   }
 
-  update(state) {
-    fetch('/api/posts/1', { method: "PUT", headers: { "Content-Type": "application/json" }, body: this.prepData(state) })
+  update(postId, state) {
+    fetch(`/api/posts/${postId}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: this.prepData(state) })
       .then((response) => {
         if(response.ok) {
           return response.json()
         }
+      })
+  }
+
+  upload(file, postId, onSuccess) {
+    const data = new FormData()
+    data.append('file', file)
+    data.append('id', postId)
+    fetch('/api/uploads', { method: "POST", body: data })
+      .then((response) => {
+        if(response.ok) {
+          return response.json()
+        }
+      }).then((body) => {
+        onSuccess(body)
       })
   }
 

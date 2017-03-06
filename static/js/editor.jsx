@@ -120,6 +120,7 @@ class EscritorioEditor extends Component {
     this.onChange = (editorState) => this._onChange(editorState)
     this.addImage = (state, src) => this._addImage(state, src)
     this.onSave = () => this._onSave()
+    this.getLatestState = () => this._getLatestState()
   }
 
   componentDidMount() {
@@ -130,7 +131,16 @@ class EscritorioEditor extends Component {
         })
         this.onChange(editorState)
       })
+    } else {
+      Api.create(this.state.editorState, (postId) => {
+        window.history.replaceState('Post', 'Hello', `/admin/posts/${postId}`);
+        this.setState({ postId: postId })
+      })
     }
+  }
+
+  _getLatestState() {
+    return this.state.editorState
   }
 
   // On change, update the app's React state with the new editor state.
@@ -139,14 +149,8 @@ class EscritorioEditor extends Component {
   }
 
   _onSave() {
-    if (!this.state.postId) {
-      Api.create(this.state.editorState, (postId) => {
-        window.history.replaceState('Post', 'Hello', `/admin/posts/${postId}`);
-        this.setState({postId: postId})
-      })
-    } else {
-      Api.update(this.state.editorState)
-    }
+    const { postId, editorState } = this.state
+    Api.update(postId, editorState)
   }
 
   // Render the editor.
@@ -163,7 +167,7 @@ class EscritorioEditor extends Component {
                 <BlockButton editorState={this.state.editorState} buttonProps={buttonProps} onChange={this.onChange} key={buttonProps.type} />
               )}
               <li className="image-upload">
-                <ImageButton editorState={this.state.editorState} onChange={this.onChange} />
+                <ImageButton editorState={this.state.editorState} onChange={this.onChange} getLatestState={this.getLatestState} postId={this.state.postId}/>
               </li>
             </ul>
           </div>
