@@ -1,5 +1,5 @@
 module Escritorio::Helpers::Api
-  def success_json(body)
+  def json(body)
     res.headers["Content-Type"] = "application/json"
     res.write Oj.dump(body)
   end

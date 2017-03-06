@@ -15,7 +15,7 @@ class Escritorio::Routes::Api::Uploads < Cuba
           f.write(tempfile.read)
         end
 
-        success_json(file: File.join("/uploads", id, file_name))
+        json(file: File.join("/uploads", id, file_name))
       end
     end
   end
