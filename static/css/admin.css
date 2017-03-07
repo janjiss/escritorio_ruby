@@ -150,3 +150,28 @@ figure {
 img.active {
   box-shadow: 0 0 0 2px blue;
 }
+
+.hover-menu {
+  padding-left: 10px;
+  padding-right: 3px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  position: absolute;
+  z-index: 1;
+  top: -10000px;
+  left: -10000px;
+  margin-top: -6px;
+  opacity: 0;
+  background-color: #222;
+  border-radius: 4px;
+  transition: opacity .75s;
+}
+
+.hover-menu .button {
+  padding-right: 7px;
+  color: #aaa;
+}
+
+.hover-menu .button[data-active="true"] {
+  color: #fff;
+}

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import Portal from 'react-portal'
 import { Block, Editor, Raw, Html, Plain, Placeholder } from 'slate'
 import enterPlugin from './plugins/enterPlugin'
 import backspacePlugin from './plugins/backspacePlugin'
@@ -8,6 +7,7 @@ import onSavePlugin from './plugins/onSavePlugin'
 import BlockButton from './components/BlockButton'
 import InlineButton from './components/InlineButton'
 import ImageButton from './components/ImageButton'
+import HoverMenu from './components/HoverMenu'
 import SoftBreak from 'slate-soft-break'
 import Escritorio from './api/escritorio'
 import { DEFAULT_NODE, DEFAULT_BLOCK, INITIAL_STATE } from './config'
@@ -104,13 +104,6 @@ const BLOCKSTYLE_TYPES = [
   {label: 'OL', type: 'ordered-list', iconClass: 'fa fa-list-ol'},
 ]
 
-const INLINE_TYPES = [
-  {label: 'Bold', type: 'bold', iconClass: 'fa fa-bold'},
-  {label: 'Italic', type: 'italic', iconClass: 'fa fa-italic'},
-  {label: 'Underline', type: 'underlined', iconClass: 'fa fa-underline'},
-  {label: 'Monospace', type: 'code', iconClass: 'fa fa-code'},
-]
-
 class EscritorioEditor extends Component {
   constructor(props) {
     super(props)
@@ -153,16 +146,15 @@ class EscritorioEditor extends Component {
     Api.update(postId, editorState)
   }
 
+
   // Render the editor.
   render() {
     return (
       <div>
+        <HoverMenu getLatestState={this.getLatestState} onChange={this.onChange} />
         <div className="toolbar-wrapper">
           <div className="toolbar-block">
             <ul>
-              {INLINE_TYPES.map((buttonProps) =>
-                <InlineButton editorState={this.state.editorState} buttonProps={buttonProps} onChange={this.onChange} key={buttonProps.type} />
-              )}
               {BLOCKSTYLE_TYPES.map((buttonProps) =>
                 <BlockButton editorState={this.state.editorState} buttonProps={buttonProps} onChange={this.onChange} key={buttonProps.type} />
               )}
