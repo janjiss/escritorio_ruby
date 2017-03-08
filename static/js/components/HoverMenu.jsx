@@ -1,4 +1,3 @@
-import { Raw } from 'slate'
 import Portal from 'react-portal'
 import React from 'react'
 
@@ -85,6 +84,10 @@ class HoverMenu extends React.Component {
       return
     }
 
+    if (editorState.startBlock.key == editorState.document.nodes.first().key) { 
+      menu.removeAttribute('style')
+      return
+    }
     // This is a hack that I don't know how to fix at the moment
     // If not for setTimeout, it fails to grab current coordinates
     // of rect
@@ -94,9 +97,7 @@ class HoverMenu extends React.Component {
       const rect = range.getBoundingClientRect()
       menu.style.opacity = 1
       menu.style.top = `${rect.top + window.scrollY - menu.offsetHeight}px`
-      console.log(menu.style.top)
       menu.style.left = `${rect.left + window.scrollX - menu.offsetWidth / 2 + rect.width / 2}px`
-      console.log(menu.style.left)
     }, 100);
   }
 
