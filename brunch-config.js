@@ -15,8 +15,9 @@ exports.plugins = {
     presets: ['latest', 'react'],
     pattern: /\.(es6|jsx)$/
   },
-  copycat:{
+  copycat: {
     "assets/images": ["static/images"],
+    "assets/fonts": ["static/fonts"],
     verbose : true, //shows each file that is copied to the destination directory 
     onlyChanged: true //only copy a file if it's modified time has changed (only effective when using brunch watch) 
   }
