@@ -1,11 +1,21 @@
 import Portal from 'react-portal'
 import React from 'react'
+import { DEFAULT_NODE } from '../config'
 
 const INLINE_TYPES = [
-  {label: 'Bold', type: 'bold', iconClass: 'fa fa-bold'},
-  {label: 'Italic', type: 'italic', iconClass: 'fa fa-italic'},
-  {label: 'Underline', type: 'underlined', iconClass: 'fa fa-underline'},
-  {label: 'Monospace', type: 'code', iconClass: 'fa fa-code'},
+  {label: 'Bold', type: 'bold', iconClass: 'fa fa-lg fa-bold'},
+  {label: 'Italic', type: 'italic', iconClass: 'fa fa-lg fa-italic'},
+  {label: 'Underline', type: 'underlined', iconClass: 'fa fa-lg fa-underline'},
+  {label: 'Monospace', type: 'code', iconClass: 'fa fa-lg fa-code'},
+]
+
+const BLOCKSTYLE_TYPES = [
+  {label: 'H1', type: 'header-one', iconClass: 'fa-lg fa fa-header'},
+  {label: 'H2', type: 'header-two', iconClass: 'fa fa-header'},
+  {label: 'Blockquote', type: 'block-quote', iconClass: 'fa-lg fa fa-quote-right'},
+  {label: 'Code', type: 'code-block', iconClass: 'fa-lg fa fa-file-code-o'},
+  {label: 'UL', type: 'unordered-list', iconClass: 'fa-lg fa fa-list'},
+  {label: 'OL', type: 'ordered-list', iconClass: 'fa-lg fa fa-list-ol'},
 ]
 
 class HoverMenu extends React.Component {
@@ -26,19 +36,84 @@ class HoverMenu extends React.Component {
     this.updateMenu()
   }
 
-  hasMark(type) {
+  hasInileSyle(type) {
     return this.getLatestState().marks.some(mark => mark.type == type)
   }
 
-  onClickMark(e, type) {
+  hasBlockStyle(type) {
+    const editorState = this.getLatestState()
+
+    const hasParentOfType = editorState.blocks.some((block) => {
+      return !!editorState.document.getClosest(block.key, parent => parent.type == type)
+    })
+
+    const isSameType = editorState.blocks.some((block) => {
+      return editorState.blocks.some(block => block.type == type)
+    })
+
+    return hasParentOfType || isSameType
+  }
+
+  onClickInlineButton(e, type) {
     e.preventDefault()
 
     const state = this.getLatestState()
       .transform()
       .toggleMark(type)
+      .focus()
       .apply()
 
     this.onChange(state)
+  }
+
+  onClickBlockButton(e, type) {
+    e.preventDefault()
+    const editorState = this.getLatestState()
+    const { document } = editorState
+    const transform = editorState.transform()
+
+    // Handle everything but list buttons.
+    if (type != 'unordered-list' && type != 'ordered-list') {
+      const isActive = this.hasBlockStyle(type)
+      const isList = this.hasBlockStyle('list-item')
+
+      if (isList) {
+        transform
+          .setBlock(isActive ? DEFAULT_NODE : type)
+          .unwrapBlock('unordered-list')
+          .unwrapBlock('ordered-list')
+      }
+
+      else {
+        transform
+          .setBlock(isActive ? DEFAULT_NODE : type)
+      }
+    }
+
+    // Handle the extra wrapping required for list buttons.
+    else {
+      const isList = this.hasBlockStyle('list-item')
+      const isType = editorState.blocks.some((block) => {
+        return !!document.getClosest(block.key, parent => parent.type == type)
+      })
+
+      if (isList && isType) {
+        transform
+          .setBlock(DEFAULT_NODE)
+          .unwrapBlock('unordered-list')
+          .unwrapBlock('ordered-list')
+      } else if (isList) {
+        transform
+          .unwrapBlock(type == 'ordered-list' ? 'unordered-list' : 'ordered-list')
+          .wrapBlock(type)
+      } else {
+        transform
+          .setBlock('list-item')
+          .wrapBlock(type)
+      }
+    }
+
+    this.onChange(transform.apply())
   }
 
   _onOpen(portal) {
@@ -57,15 +132,28 @@ class HoverMenu extends React.Component {
     return (
       <Portal isOpened onOpen={this.onOpen}>
         <div className="menu hover-menu">
-          { INLINE_TYPES.map((type) => { return this.renderMarkButton(type) }) }
+          { INLINE_TYPES.map((type) => { return this.renderInlineButton(type) }) }
+          <span style={{paddingLeft: "0px", paddingRight: "5px", fontSize: "20px"}}>|</span>
+          { BLOCKSTYLE_TYPES.map((type) => { return this.renderBlockButton(type) }) }
         </div>
       </Portal>
     )
   }
 
-  renderMarkButton(button) {
-    const isActive = this.hasMark(button.type)
-    const onMouseDown = e => this.onClickMark(e, button.type)
+  renderInlineButton(button) {
+    const isActive = this.hasInileSyle(button.type)
+    const onMouseDown = e => this.onClickInlineButton(e, button.type)
+
+    return (
+      <span key={button.type} className="button" onMouseDown={onMouseDown} data-active={isActive}>
+        <i className={button.iconClass} aria-hidden="true"></i>
+      </span>
+    )
+  }
+
+  renderBlockButton(button) {
+    const isActive = this.hasBlockStyle(button.type)
+    const onMouseDown = e => this.onClickBlockButton(e, button.type)
 
     return (
       <span key={button.type} className="button" onMouseDown={onMouseDown} data-active={isActive}>
@@ -80,12 +168,12 @@ class HoverMenu extends React.Component {
     if (!menu) return
 
     if (editorState.isBlurred || editorState.isCollapsed) {
-      menu.removeAttribute('style')
+      menu.style = null
       return
     }
 
-    if (editorState.startBlock.key == editorState.document.nodes.first().key) { 
-      menu.removeAttribute('style')
+    if (editorState.startBlock.key == editorState.document.nodes.first().key) {
+      menu.style = null
       return
     }
     // This is a hack that I don't know how to fix at the moment
@@ -95,9 +183,15 @@ class HoverMenu extends React.Component {
       const selection = window.getSelection()
       const range = selection.getRangeAt(0)
       const rect = range.getBoundingClientRect()
+      const scrollY = window.scrollY
+      const scrollX = window.scrollX
+      const top = rect.top
+      const left = rect.left
+      const width = rect.width
+
       menu.style.opacity = 1
-      menu.style.top = `${rect.top + window.scrollY - menu.offsetHeight}px`
-      menu.style.left = `${rect.left + window.scrollX - menu.offsetWidth / 2 + rect.width / 2}px`
+      menu.style.top = `${top + scrollY - menu.offsetHeight - 15}px`
+      menu.style.left = `${left + scrollX - menu.offsetWidth / 2 + width / 2}px`
     }, 100);
   }
 

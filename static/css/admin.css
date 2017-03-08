@@ -164,7 +164,7 @@ img.active {
   opacity: 0;
   background-color: #222;
   border-radius: 4px;
-  transition: opacity .75s;
+  transition: all .1s linear;
 }
 
 .hover-menu .button {
