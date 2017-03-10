@@ -150,3 +150,53 @@ figure {
 img.active {
   box-shadow: 0 0 0 2px blue;
 }
+
+.hover-menu {
+  padding-left: 10px;
+  padding-right: 3px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  position: absolute;
+  z-index: 1;
+  top: -10000px;
+  left: -10000px;
+  margin-top: -6px;
+  opacity: 0;
+  background-color: #222;
+  border-radius: 4px;
+  transition: left 0.1s linear, top 0.1s linear;
+}
+
+.hover-menu:after, .hover-menu:before {
+  top: 100%;
+  left: 50%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.hover-menu:after {
+  border-color: rgba(21, 28, 33, 0);
+  border-top-color: #222;
+  border-width: 4px;
+  margin-left: -4px;
+}
+
+.hover-menu:before {
+  border-color: rgba(194, 225, 245, 0);
+  border-top-color: #222;
+  border-width: 5px;
+  margin-left: -5px;
+}
+
+.hover-menu .button {
+  padding-right: 7px;
+  color: #aaa;
+}
+
+.hover-menu .button[data-active="true"] {
+  color: #fff;
+}

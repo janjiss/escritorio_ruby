@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import Portal from 'react-portal'
 import { Block, Editor, Raw, Html, Plain, Placeholder } from 'slate'
 import enterPlugin from './plugins/enterPlugin'
 import backspacePlugin from './plugins/backspacePlugin'
 import onSavePlugin from './plugins/onSavePlugin'
-import BlockButton from './components/BlockButton'
-import InlineButton from './components/InlineButton'
 import ImageButton from './components/ImageButton'
+import HoverMenu from './components/HoverMenu'
 import SoftBreak from 'slate-soft-break'
 import Escritorio from './api/escritorio'
 import { DEFAULT_NODE, DEFAULT_BLOCK, INITIAL_STATE } from './config'
@@ -77,8 +75,8 @@ const schema = {
         transform.setBlock({type: 'header-one'})
       }
     },
-    // Rule to insert a paragraph below a void node (the image)
-    // if that node is the last one in the document
+    // Always insert an empty node at the end of the document if last
+    // Node is no paragraph
     {
       match: (node) => {
         return node.kind == 'document'
@@ -94,22 +92,6 @@ const schema = {
     }
   ]
 }
-
-const BLOCKSTYLE_TYPES = [
-  {label: 'H1', type: 'header-one'},
-  {label: 'H2', type: 'header-two'},
-  {label: 'Blockquote', type: 'block-quote', iconClass: 'fa fa-quote-right'},
-  {label: 'Code', type: 'code-block', iconClass: 'fa fa-file-code-o'},
-  {label: 'UL', type: 'unordered-list', iconClass: 'fa fa-list'},
-  {label: 'OL', type: 'ordered-list', iconClass: 'fa fa-list-ol'},
-]
-
-const INLINE_TYPES = [
-  {label: 'Bold', type: 'bold', iconClass: 'fa fa-bold'},
-  {label: 'Italic', type: 'italic', iconClass: 'fa fa-italic'},
-  {label: 'Underline', type: 'underlined', iconClass: 'fa fa-underline'},
-  {label: 'Monospace', type: 'code', iconClass: 'fa fa-code'},
-]
 
 class EscritorioEditor extends Component {
   constructor(props) {
@@ -153,19 +135,13 @@ class EscritorioEditor extends Component {
     Api.update(postId, editorState)
   }
 
-  // Render the editor.
   render() {
     return (
       <div>
+        <HoverMenu getLatestState={this.getLatestState} onChange={this.onChange} />
         <div className="toolbar-wrapper">
           <div className="toolbar-block">
             <ul>
-              {INLINE_TYPES.map((buttonProps) =>
-                <InlineButton editorState={this.state.editorState} buttonProps={buttonProps} onChange={this.onChange} key={buttonProps.type} />
-              )}
-              {BLOCKSTYLE_TYPES.map((buttonProps) =>
-                <BlockButton editorState={this.state.editorState} buttonProps={buttonProps} onChange={this.onChange} key={buttonProps.type} />
-              )}
               <li className="image-upload">
                 <ImageButton editorState={this.state.editorState} onChange={this.onChange} getLatestState={this.getLatestState} postId={this.state.postId}/>
               </li>

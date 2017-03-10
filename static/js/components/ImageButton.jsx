@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import Escritorio from '../api/escritorio'
+import { List } from 'immutable'
+import { Block } from 'slate'
 const Api = new Escritorio
 
 export default class ImageControl extends Component {
@@ -13,20 +15,38 @@ export default class ImageControl extends Component {
     this.addImage = (file) => { this._addImage(file) }
   }
 
+  getTopMostParent(document, node) {
+    if (document.getParent(node.key).kind === 'document') {
+      return node
+    } else {
+      return this.getTopMostParent(document, document.getParent(node.key))
+    }
+  }
+
   _addImage(file) {
     const reader = new FileReader();
-    reader.onloadend = () => {
 
-      const getLatestState = this.getLatestState
-      const stateWithTemporaryImage = getLatestState().transform()
-        .insertBlock({
-          type: 'image',
-          isVoid: true,
-          data: {
-            src: reader.result,
-            inProgress: true
-          }
-        })
+    reader.onloadend = () => {
+      const editorState = this.getLatestState()
+      const { document } = editorState
+      const endBlock = editorState.endBlock
+      const topMostParent = this.getTopMostParent(document, endBlock)
+
+      const index = document.nodes.findIndex((value, index) => {
+        if (topMostParent.key == value.key) {
+          return true
+        }
+      })
+
+      const imageBlock = Block.create({
+        type: 'image',
+        isVoid: true,
+        data: { src: reader.result, inProgress: true }
+      })
+
+      const stateWithTemporaryImage = this.getLatestState().transform()
+        .insertNodeByKey(document.key, index + 1, imageBlock)
+        .collapseToStartOfNextBlock()
         .focus()
         .apply()
 
@@ -36,7 +56,8 @@ export default class ImageControl extends Component {
 
       Api.upload(file, this.props.postId, (result) => {
         const src = result.file
-        const stateWithFinalImage = getLatestState().transform()
+        const stateWithFinalImage = this.getLatestState()
+          .transform()
           .setNodeByKey(imageKey, { data: { src: src, inProgress: false } })
           .apply()
 
