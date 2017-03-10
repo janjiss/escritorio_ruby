@@ -16,10 +16,13 @@ export default class ImageControl extends Component {
   }
 
   getTopMostParent(document, node) {
-    if (document.getParent(node.key).kind === 'document') {
+    const ancestors = document.getAncestors(node.key)
+    if (ancestors.size <= 1) {
       return node
     } else {
-      return this.getTopMostParent(document, document.getParent(node.key))
+      return document.getAncestors(node.key).find((ancestor) => {
+        return ancestor.kind !== 'document'
+      })
     }
   }
 
