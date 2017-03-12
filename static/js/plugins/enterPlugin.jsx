@@ -17,9 +17,9 @@ const setCurrentToDefaultBlock = (state) => {
 
 const splitListAndInsertNewBlock = (state, document) => {
   const transform = state.transform()
-  const { focusBlock } = state
-  const nextSibling = document.getNextSibling(focusBlock.key)
-  const previousSibling = document.getPreviousSibling(focusBlock.key)
+  const { endBlock } = state
+  const nextSibling = document.getNextSibling(endBlock.key)
+  const previousSibling = document.getPreviousSibling(endBlock.key)
 
   if (nextSibling && previousSibling) {
     // If there is a next and previous list-item sibling,

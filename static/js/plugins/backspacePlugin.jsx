@@ -16,6 +16,7 @@ export default function backspacePlugin() {
       if (focusBlock.length > 0) return
       // We only want to perform the operation on blocks that are not already default blocks
       if (focusBlock.type === DEFAULT_BLOCK.type) return
+      // If the previous block is of the same type, we don't want to change the type
       if (previousBlock && focusBlock.type === previousBlock.type) return
 
       return state.transform()

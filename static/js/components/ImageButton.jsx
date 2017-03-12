@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import Escritorio from '../api/escritorio'
-import { List } from 'immutable'
 import { Block } from 'slate'
 const Api = new Escritorio
 
@@ -36,9 +35,7 @@ export default class ImageControl extends Component {
       const topMostParent = this.getTopMostParent(document, endBlock)
 
       const index = document.nodes.findIndex((value, index) => {
-        if (topMostParent.key == value.key) {
-          return true
-        }
+        topMostParent.key === value.key
       })
 
       const imageBlock = Block.create({
