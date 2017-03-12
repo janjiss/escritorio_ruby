@@ -98,20 +98,15 @@ const schema = {
         return node.kind == 'document'
       },
       validate: (document) => {
-        let previousNodeType = null
-        const joinableNode = document.nodes.find((node, key) => {
-          if (node.type === 'ordered-list' || node.type === 'unordered-list') {
-            if (previousNodeType === node.type) {
-              return true
-            } else {
-              previousNodeType = node.type
-              return false
-            }
-          } else {
-            previousNodeType = null
-            return false
-          }
+        const joinableNode = document.nodes.find((node, index) => {
+          if (!['ordered-list', 'unordered-list'].includes(node.type)) { return false }
+
+          const previousNode = document.nodes.get(index - 1)
+          if (!previousNode) { return false }
+
+          return node.type === previousNode.type
         })
+
         if ( joinableNode ) {
           const previousNode = document.getPreviousSibling(joinableNode.key)
           return { previousNode, joinableNode }
