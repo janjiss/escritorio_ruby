@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { Block, Editor, Raw, Html, Plain, Placeholder } from 'slate'
+import { Block, Editor, Raw, Html, Plain } from 'slate'
 import enterPlugin from './plugins/enterPlugin'
 import backspacePlugin from './plugins/backspacePlugin'
 import onSavePlugin from './plugins/onSavePlugin'
@@ -88,6 +88,45 @@ const schema = {
       normalize: (transform, document) => {
         const block = Block.create(DEFAULT_BLOCK)
         transform.insertNodeByKey(document.key, document.nodes.size, block)
+      }
+    },
+
+    // Join together lists that don't have
+    // any blocks in-between
+    {
+      match: (node) => {
+        return node.kind == 'document'
+      },
+      validate: (document) => {
+        let previousNodeType = null
+        const joinableNode = document.nodes.find((node, key) => {
+          if (node.type === 'ordered-list' || node.type === 'unordered-list') {
+            if (previousNodeType === node.type) {
+              return true
+            } else {
+              previousNodeType = node.type
+              return false
+            }
+          } else {
+            previousNodeType = null
+            return false
+          }
+        })
+        if ( joinableNode ) {
+          const previousNode = document.getPreviousSibling(joinableNode.key)
+          return { previousNode, joinableNode }
+        } else {
+          return false
+        }
+      },
+      normalize: (transform, document, nodes) => {
+        const { joinableNode, previousNode } = nodes
+        const joinableNodelistItems = joinableNode.nodes
+
+        joinableNodelistItems.forEach((node, index) => {
+          transform.moveNodeByKey(node.key, previousNode.key, previousNode.nodes.size + index)
+        })
+        return transform.removeNodeByKey(joinableNode.key)
       }
     }
   ]
