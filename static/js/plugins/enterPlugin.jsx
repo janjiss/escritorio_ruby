@@ -19,18 +19,20 @@ const splitListAndInsertNewBlock = (state, document) => {
   const transform = state.transform()
   const { focusBlock } = state
   const nextSibling = document.getNextSibling(focusBlock.key)
+  const previousSibling = document.getPreviousSibling(focusBlock.key)
 
-  // This is super hacky. It check if the next item is list-item and 
-  // then splits it in to two, but the problem is that it still
-  // adds list tiem. That's why we are doing the deletion
-  if (nextSibling && nextSibling.type === 'list-item') {
+  if (nextSibling && previousSibling) {
+    // If there is a next and previous list-item sibling,
+    // we set the current block to default, but the problem
+    // is that it adds another list-item block, hence
+    // we need to collapse to it and set it to default 
+    // as well.
     return state.transform()
+      .setBlock(DEFAULT_BLOCK.type)
       .unwrapBlock()
-      .splitBlock(2)
-      .unwrapBlock()
-      .insertBlock(DEFAULT_BLOCK.type)
       .collapseToStartOfNextBlock()
-      .deleteForward(1)
+      .setBlock(DEFAULT_BLOCK.type)
+      .unwrapBlock()
       .apply()
   } else {
     return setCurrentToDefaultBlock(state)

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { Block, Editor, Raw, Html, Plain, Placeholder } from 'slate'
+import { Block, Editor, Raw, Html, Plain } from 'slate'
 import enterPlugin from './plugins/enterPlugin'
 import backspacePlugin from './plugins/backspacePlugin'
 import onSavePlugin from './plugins/onSavePlugin'
@@ -8,90 +8,13 @@ import ImageButton from './components/ImageButton'
 import HoverMenu from './components/HoverMenu'
 import SoftBreak from 'slate-soft-break'
 import Escritorio from './api/escritorio'
-import { DEFAULT_NODE, DEFAULT_BLOCK, INITIAL_STATE } from './config'
+import schema from './schema'
+import { INITIAL_STATE } from './config'
 
 const Api = new Escritorio
 
 const editorElement = document.getElementById('editor')
 
-const schema = {
-  nodes: {
-    'image': (props) => {
-      const { node, state } = props
-      const isFocused = state.selection.hasEdgeIn(node)
-      const src = node.data.get('src')
-      const className = isFocused ? 'active' : null
-      return (<img style={{width: "100%"}} src={src} className={className} {...props.attributes} />)
-    },
-    'paragraph': (props) => { return <p {...props.attributes}>{props.children}</p> },
-    'code-block': (props) => { return <pre {...props.attributes}>{props.children}</pre> },
-    'block-quote': (props) => { return <blockquote {...props.attributes}>{props.children}</blockquote> },
-    'header-one': (props) => { return <h1 {...props.attributes}>{props.children}</h1> },
-    'header-two': (props) => { return <h2 {...props.attributes}>{props.children}</h2> },
-    'list-item': (props) => { return <li {...props.attributes}>{props.children}</li> },
-    'ordered-list': (props) => { return <ol {...props.attributes}>{props.children}</ol> },
-    'unordered-list': (props) => { return <ul {...props.attributes}>{props.children}</ul> }
-  },
-  marks: {
-    bold: {
-      fontWeight: 'bold'
-    },
-    code: {
-      fontFamily: 'monospace',
-      backgroundColor: '#eee',
-      padding: '3px'
-    },
-    italic: {
-      fontStyle: 'italic'
-    },
-    underlined: {
-      textDecoration: 'underline'
-    }
-  },
-  rules: [
-    // Rule to insert a paragraph block if the document is empty
-    {
-      match: (node) => {
-        return node.kind == 'document'
-      },
-        validate: (document) => {
-          return document.nodes.size ? null : true
-        },
-        normalize: (transform, document) => {
-          const block = Block.create(DEFAULT_BLOCK)
-          transform.insertNodeByKey(document.key, 0, block)
-        }
-    },
-    // Rule to always have first block as header-one element
-    {
-      match: (node) => {
-        return node.kind == 'document'
-      },
-      validate: (document) => {
-        const firstNode = document.nodes.first()
-        return firstNode && firstNode.type == 'header-one' ? null : true
-      },
-      normalize: (transform, document) => {
-        transform.setBlock({type: 'header-one'})
-      }
-    },
-    // Always insert an empty node at the end of the document if last
-    // Node is no paragraph
-    {
-      match: (node) => {
-        return node.kind == 'document'
-      },
-      validate: (document) => {
-        const lastNode = document.nodes.last()
-        return lastNode && lastNode.type == DEFAULT_BLOCK.type ? null : true
-      },
-      normalize: (transform, document) => {
-        const block = Block.create(DEFAULT_BLOCK)
-        transform.insertNodeByKey(document.key, document.nodes.size, block)
-      }
-    }
-  ]
-}
 
 class EscritorioEditor extends Component {
   constructor(props) {
