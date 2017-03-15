@@ -8,13 +8,10 @@ export default class ImageControl extends Component {
     super(props)
     this.state = { value: "" }
     this.getLatestState = this.props.getLatestState
-    this.onClick = () => { this._onClick() }
-    this.onFileSelected = (e) => { this._onFileSelected(e) }
     this.onChange = this.props.onChange
-    this.addImage = (file) => { this._addImage(file) }
   }
 
-  getTopMostParent(document, node) {
+  getTopMostParent = (document, node) => {
     const ancestors = document.getAncestors(node.key)
     if (ancestors.size <= 1) {
       return node
@@ -25,7 +22,7 @@ export default class ImageControl extends Component {
     }
   }
 
-  _addImage(file) {
+  addImage = (file) => {
     const reader = new FileReader();
 
     reader.onloadend = () => {
@@ -34,8 +31,9 @@ export default class ImageControl extends Component {
       const endBlock = editorState.endBlock
       const topMostParent = this.getTopMostParent(document, endBlock)
 
+
       const index = document.nodes.findIndex((value, index) => {
-        topMostParent.key === value.key
+        return topMostParent.key === value.key
       })
 
       const imageBlock = Block.create({
@@ -43,6 +41,7 @@ export default class ImageControl extends Component {
         isVoid: true,
         data: { src: reader.result, inProgress: true }
       })
+
 
       const stateWithTemporaryImage = this.getLatestState().transform()
         .insertNodeByKey(document.key, index + 1, imageBlock)
@@ -67,16 +66,16 @@ export default class ImageControl extends Component {
     reader.readAsDataURL(file)
   }
 
-  _onClick() {
+  onClick = () => {
     this.refs.fileField.click()
   }
 
-  _onFileSelected(e) {
+  onFileSelected = (e) => {
     this.addImage(e.target.files[0])
     this.setState({value: ""})
   }
 
-  render() {
+  render = () => {
     return(
     <span>
       <input type="file" ref="fileField" value={this.state.value} style={{display: "none"}} onChange={this.onFileSelected} />

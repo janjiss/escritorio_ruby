@@ -15,20 +15,14 @@ const Api = new Escritorio
 
 const editorElement = document.getElementById('editor')
 
-
 class EscritorioEditor extends Component {
   constructor(props) {
     super(props)
     const postId = editorElement.dataset.postId.length <= 0 ? null : editorElement.dataset.postId
-
     this.state = { editorState: INITIAL_STATE, postId: postId }
-    this.onChange = (editorState) => this._onChange(editorState)
-    this.addImage = (state, src) => this._addImage(state, src)
-    this.onSave = () => this._onSave()
-    this.getLatestState = () => this._getLatestState()
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     if(this.state.postId) {
       Api.fetch(editorElement.dataset.postId, (editorState, post) => {
         this.setState({
@@ -44,21 +38,21 @@ class EscritorioEditor extends Component {
     }
   }
 
-  _getLatestState() {
+  getLatestState = () => {
     return this.state.editorState
   }
 
   // On change, update the app's React state with the new editor state.
-  _onChange(editorState) {
+  onChange = (editorState) => {
     this.setState({ editorState })
   }
 
-  _onSave() {
+  onSave = () => {
     const { postId, editorState } = this.state
     Api.update(postId, editorState)
   }
 
-  render() {
+  render = () => {
     return (
       <div>
         <HoverMenu getLatestState={this.getLatestState} onChange={this.onChange} />

@@ -1,24 +1,6 @@
 import { Raw } from 'slate'
 const DEFAULT_NODE = 'paragraph'
 
-// TODO: Implement these as keys everywhere
-const BLOCK_TYPES = {
-  PARAGRAPH: 'paragraph',
-  IMAGE: 'image',
-  PARAGRAPH: 'paragraph',
-  CODE_BLOCK: 'code-block',
-  BLOCK_QUOTE: 'block-quote',
-  HEADER_ONE: 'header-one',
-  HEADER_TWO: 'header-two',
-  LIST_ITEM: 'list-item',
-  ORDERED_LIST: 'ordered-list',
-  UNORDERED_LIST: 'unordered-list',
-  BOLD: 'bold',
-  CODE: 'code',
-  ITALIC: 'italic',
-  UNDERLINED: 'underlined',
-}
-
 const INITIAL_STATE = Raw.deserialize({
   nodes: [
     {

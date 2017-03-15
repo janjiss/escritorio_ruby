@@ -2,14 +2,16 @@ import Portal from 'react-portal'
 import React from 'react'
 import { DEFAULT_NODE } from '../config'
 
-const INLINE_TYPES = [
+const MARK_TYPES = [
   {label: 'Bold', type: 'bold', iconClass: 'fa fa-lg fa-bold'},
   {label: 'Italic', type: 'italic', iconClass: 'fa fa-lg fa-italic'},
   {label: 'Underline', type: 'underlined', iconClass: 'fa fa-lg fa-underline'},
   {label: 'Monospace', type: 'code', iconClass: 'fa fa-lg fa-code'},
 ]
 
-const BLOCKSTYLE_TYPES = [
+const LINK_BUTTON = {label: 'LINK', type: 'link', iconClass: 'fa-lg fa fa-link'}
+
+const BLOCK_TYPES = [
   {label: 'H1', type: 'header-one', iconClass: 'fa-lg fa fa-header'},
   {label: 'H2', type: 'header-two', iconClass: 'fa fa-header'},
   {label: 'Blockquote', type: 'block-quote', iconClass: 'fa-lg fa fa-quote-right'},
@@ -21,26 +23,24 @@ const BLOCKSTYLE_TYPES = [
 class HoverMenu extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { menu: false }
+    this.state = { menu: false, linkInputActive: false, linkInputValue: "" }
     this.getLatestState = this.props.getLatestState
     this.onChange = this.props.onChange
-    this.onOpen = (portal) => this._onOpen(portal)
-    this.updateMenu = () => this._updateMenu()
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.updateMenu()
   }
 
-  componentDidUpdate() {
+  componentDidUpdate = () => {
     this.updateMenu()
   }
 
-  hasInileSyle(type) {
+  hasMark = (type) => {
     return this.getLatestState().marks.some(mark => mark.type == type)
   }
 
-  hasBlockStyle(type) {
+  hasBlock = (type) => {
     const editorState = this.getLatestState()
 
     const hasParentOfType = editorState.blocks.some((block) => {
@@ -54,7 +54,11 @@ class HoverMenu extends React.Component {
     return hasParentOfType || isSameType
   }
 
-  onClickInlineButton(e, type) {
+  hasLinks = () => {
+    return this.getLatestState().inlines.some(inline => inline.type == 'link')
+  }
+
+  onClickMarkButton = (e, type) => {
     e.preventDefault()
 
     const state = this.getLatestState()
@@ -66,7 +70,34 @@ class HoverMenu extends React.Component {
     this.onChange(state)
   }
 
-  onClickBlockButton(e, type) {
+  onClickLinkButton = (e, type) => {
+    e.preventDefault()
+
+    const editorState = this.getLatestState()
+
+    if (this.hasLinks()) {
+      this.onChange(
+        editorState
+          .transform()
+          .unwrapInline('link')
+          .apply()
+      )
+    } else {
+      const blurredState = editorState
+        .transform()
+        .blur()
+        .apply()
+
+      this.onChange(blurredState)
+
+      this.setState({ linkInputActive: true })
+      this.refs.menu.style.display = 'none'
+      this.refs.linkInput.style.display = 'block'
+      this.refs.linkInput.children[0].focus();
+    }
+  }
+
+  onClickBlockButton = (e, type) => {
     e.preventDefault()
     const editorState = this.getLatestState()
     const { document } = editorState
@@ -74,14 +105,13 @@ class HoverMenu extends React.Component {
 
     // Handle everything but list buttons.
     if (type != 'unordered-list' && type != 'ordered-list') {
-      const isActive = this.hasBlockStyle(type)
-      const isList = this.hasBlockStyle('list-item')
+      const isActive = this.hasBlock(type)
+      const isList = this.hasBlock('list-item')
 
       if (isList) {
         transform
           .setBlock(isActive ? DEFAULT_NODE : type)
-          .unwrapBlock('unordered-list')
-          .unwrapBlock('ordered-list')
+          .unwrapBlock(type == 'ordered-list' ? 'unordered-list' : 'ordered-list')
       }
 
       else {
@@ -92,7 +122,7 @@ class HoverMenu extends React.Component {
 
     // Handle the extra wrapping required for list buttons.
     else {
-      const isList = this.hasBlockStyle('list-item')
+      const isList = this.hasBlock('list-item')
       const isType = editorState.blocks.some((block) => {
         return !!document.getClosest(block.key, parent => parent.type == type)
       })
@@ -116,11 +146,58 @@ class HoverMenu extends React.Component {
     this.onChange(transform.apply())
   }
 
-  _onOpen(portal) {
+  onChangeLinkInput = (e) => {
+    this.setState({ linkInputValue: e.target.value })
+  }
+
+  onKeyDownLinkInput = (e) => {
+    if (e.keyCode === 13) {
+      e.preventDefault()
+
+      const editorState = this.getLatestState()
+
+      if (e.target.value === '')  {
+        this.refs.menu.style.display = 'block'
+        this.refs.linkInput.style.display = 'none'
+        this.setState({ linkInputActive: false })
+
+        this.onChange(
+          editorState
+            .transform()
+            .focus()
+            .collapseToEnd()
+            .apply()
+        )
+        return
+      }
+
+
+      this.refs.menu.style.display = 'block'
+      this.refs.linkInput.style.display = 'none'
+
+      const focusState = editorState
+        .transform()
+        .wrapInline({ type: 'link', data: { url: e.target.value } })
+        .collapseToEnd()
+        .focus()
+        .apply()
+
+      this.onChange(focusState)
+      this.setState({ linkInputActive: false, linkInputValue: "" })
+    }
+  }
+
+  onLinkInputBlur = (e) => {
+    this.setState({ linkInputActive: false, linkInputValue: "" })
+    this.refs.menu.style.display = 'block'
+    this.refs.linkInput.style.display = 'none'
+  }
+
+  onOpen = (portal) => {
     this.setState({ menu: portal.firstChild })
   }
 
-  render() {
+  render = () => {
     return (
       <div>
         {this.renderMenu()}
@@ -128,21 +205,28 @@ class HoverMenu extends React.Component {
     )
   }
 
-  renderMenu() {
+  renderMenu = () => {
     return (
       <Portal isOpened onOpen={this.onOpen}>
         <div className="menu hover-menu">
-          { INLINE_TYPES.map((type) => { return this.renderInlineButton(type) }) }
-          <span style={{paddingLeft: "0px", paddingRight: "5px", fontSize: "20px"}}>|</span>
-          { BLOCKSTYLE_TYPES.map((type) => { return this.renderBlockButton(type) }) }
+          <div ref="menu" style={{display: "block"}}>
+            { MARK_TYPES.map((type) => { return this.renderMarkButton(type) }) }
+            <span style={{paddingLeft: "0px", paddingRight: "5px", fontSize: "20px"}}>|</span>
+            { this.renderLinkButton(LINK_BUTTON) }
+            <span style={{paddingLeft: "0px", paddingRight: "5px", fontSize: "20px"}}>|</span>
+            { BLOCK_TYPES.map((type) => { return this.renderBlockButton(type) }) }
+          </div>
+          <div ref="linkInput" style={{display: "none"}} >
+            <input placeholder="Enter link URL" className="textInput" onBlur={this.onLinkInputBlur} onKeyDown={ this.onKeyDownLinkInput } onChange={ this.onChangeLinkInput } value={ this.state.linkInputValue }></input> 
+          </div>
         </div>
       </Portal>
     )
   }
 
-  renderInlineButton(button) {
-    const isActive = this.hasInileSyle(button.type)
-    const onMouseDown = e => this.onClickInlineButton(e, button.type)
+  renderMarkButton = (button) => {
+    const isActive = this.hasMark(button.type)
+    const onMouseDown = e => this.onClickMarkButton(e, button.type)
 
     return (
       <span key={button.type} className="button" onMouseDown={onMouseDown} data-active={isActive}>
@@ -151,8 +235,19 @@ class HoverMenu extends React.Component {
     )
   }
 
-  renderBlockButton(button) {
-    const isActive = this.hasBlockStyle(button.type)
+  renderLinkButton = (button) => {
+    const isActive = this.hasLinks()
+    const onMouseDown = e => this.onClickLinkButton(e, button.type)
+
+    return (
+      <span key={button.type} className="button" onMouseDown={onMouseDown} data-active={isActive}>
+        <i className={button.iconClass} aria-hidden="true"></i>
+      </span>
+    )
+  }
+
+  renderBlockButton = (button) => {
+    const isActive = this.hasBlock(button.type)
     const onMouseDown = e => this.onClickBlockButton(e, button.type)
 
     return (
@@ -162,12 +257,12 @@ class HoverMenu extends React.Component {
     )
   }
 
-  _updateMenu() {
-    const { menu } = this.state
+  updateMenu = () => {
+    const { menu, linkInputActive } = this.state
     const editorState = this.getLatestState()
     if (!menu) return
 
-    if (editorState.isBlurred || editorState.isCollapsed) {
+    if ((editorState.isBlurred || editorState.isCollapsed) && !linkInputActive ) {
       menu.style = null
       return
     }
@@ -176,25 +271,28 @@ class HoverMenu extends React.Component {
       menu.style = null
       return
     }
-    // This is a hack that I don't know how to fix at the moment
-    // If not for setTimeout, it fails to grab current coordinates
-    // of rect
-    setTimeout(function(){
-      const selection = window.getSelection()
-      const range = selection.getRangeAt(0)
-      const rect = range.getBoundingClientRect()
-      const scrollY = window.scrollY
-      const scrollX = window.scrollX
-      const top = rect.top
-      const left = rect.left
-      const width = rect.width
 
-      menu.style.opacity = 1
-      menu.style.top = `${top + scrollY - menu.offsetHeight - 15}px`
-      menu.style.left = `${left + scrollX - menu.offsetWidth / 2 + width / 2}px`
-    }, 100);
+    if (!linkInputActive) {
+
+      // This is a hack that I don't know how to fix at the moment
+      // If not for setTimeout, it fails to grab current coordinates
+      // of rect
+      setTimeout(function(){
+        const selection = window.getSelection()
+        const range = selection.getRangeAt(0)
+        const rect = range.getBoundingClientRect()
+        const scrollY = window.scrollY
+        const scrollX = window.scrollX
+        const top = rect.top
+        const left = rect.left
+        const width = rect.width
+
+        menu.style.opacity = 1
+        menu.style.top = `${top + scrollY - menu.offsetHeight - 15}px`
+        menu.style.left = `${left + scrollX - menu.offsetWidth / 2 + width / 2}px`
+      }, 100);
+    }
   }
-
 }
 
 export default HoverMenu

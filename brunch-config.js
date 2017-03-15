@@ -12,7 +12,7 @@ exports.paths = {
 
 exports.plugins = {
   babel: {
-    presets: ['latest', 'react'],
+    presets: ['es2015', 'stage-0', 'react'],
     pattern: /\.(es6|jsx)$/
   },
   copycat: {

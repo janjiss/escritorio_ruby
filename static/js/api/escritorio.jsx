@@ -7,14 +7,23 @@ const SERIALIZE_RULES = [
       if (object.kind != 'block') return
       switch (object.type) {
         case 'image': return <img src={object.data.get('src')}></img>
-        case 'paragraph': return <p>{children}</p>
-        case 'block-quote': return <blockquote>{children}</blockquote>
-        case 'code-block': return <pre><code>{children}</code></pre>
-        case 'header-one': return <h1>{children}</h1>
-        case 'header-two': return <h2>{children}</h2>
-        case 'list-item': return <li>{children}</li>
-        case 'unordered-list': return <ul>{children}</ul>
-        case 'ordered-list': return <ol>{children}</ol>
+        case 'paragraph': return <p>{ children }</p>
+        case 'block-quote': return <blockquote>{ children }</blockquote>
+        case 'code-block': return <pre><code>{ children }</code></pre>
+        case 'header-one': return <h1>{ children }</h1>
+        case 'header-two': return <h2>{ children }</h2>
+        case 'title': return <h1>{ children }</h1>
+        case 'list-item': return <li>{ children }</li>
+        case 'unordered-list': return <ul>{ children }</ul>
+        case 'ordered-list': return <ol>{ children }</ol>
+      }
+    }
+  },
+  {
+    serialize(object, children) {
+      if (object.kind != 'inline') return
+      switch (object.type) {
+        case 'link': return <a href={object.data.get('url')}>{ children }</a>
       }
     }
   },
@@ -22,10 +31,10 @@ const SERIALIZE_RULES = [
     serialize(object, children) {
       if (object.kind != 'mark') return
       switch (object.type) {
-        case 'bold': return <strong>{children}</strong>
-        case 'italic': return <i>{children}</i>
-        case 'underlined': return <u>{children}</u>
-        case 'code': return <code>{children}</code>
+        case 'bold': return <strong>{ children }</strong>
+        case 'italic': return <i>{ children }</i>
+        case 'underlined': return <u>{ children }</u>
+        case 'code': return <code>{ children }</code>
       }
     }
   }
@@ -34,11 +43,7 @@ const SERIALIZE_RULES = [
 const HTMLSerializer = new Html({ rules: SERIALIZE_RULES })
 
 export default class Escritorio {
-  constructor() {
-    this.prepData = (state) => this._prepData(state)
-  }
-
-  fetch(id, onSuccess) {
+  fetch = (id, onSuccess) => {
     fetch(`/api/posts/${id}`)
       .then((response) => {
         if(response.ok) {
@@ -51,7 +56,7 @@ export default class Escritorio {
       })
   }
 
-  create(state, onSuccess) {
+  create = (state, onSuccess) => {
     fetch('/api/posts', { method: "POST", headers: { "Content-Type": "application/json" }, body: this.prepData(state) })
       .then((response) => {
         if(response.ok) {
@@ -63,7 +68,7 @@ export default class Escritorio {
       })
   }
 
-  update(postId, state) {
+  update = (postId, state) => {
     fetch(`/api/posts/${postId}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: this.prepData(state) })
       .then((response) => {
         if(response.ok) {
@@ -72,7 +77,7 @@ export default class Escritorio {
       })
   }
 
-  upload(file, postId, onSuccess) {
+  upload = (file, postId, onSuccess) => {
     const data = new FormData()
     data.append('file', file)
     data.append('id', postId)
@@ -86,7 +91,7 @@ export default class Escritorio {
       })
   }
 
-  _prepData(state) {
+  prepData = (state) => {
     const title = state.document.nodes.first()
     const excerpt = state.document.nodes.get(1)
     const updatedState = state.transform()
