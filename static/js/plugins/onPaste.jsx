@@ -1,26 +1,27 @@
 import { Html } from 'slate'
+import { BLOCKS, MARKS, INLINES } from '../config'
 
 const BLOCK_TAGS = {
-  p: 'paragraph',
-  li: 'list-item',
-  ul: 'unordered-list',
-  ol: 'ordered-list',
-  blockquote: 'block-quote',
-  pre: 'code-block',
-  h1: 'header-one',
-  h2: 'header-two',
-  h3: 'header-two',
-  h4: 'header-two',
-  h5: 'header-two',
-  h6: 'header-two'
+  p:          BLOCKS.PARAGRAPH,
+  li:         BLOCKS.LIST_ITEM,
+  ul:         BLOCKS.UNORDERED_LIST,
+  ol:         BLOCKS.ORDERED_LIST,
+  pre:        BLOCKS.CODE_BLOCK,
+  h1:         BLOCKS.HEADER_ONE,
+  h2:         BLOCKS.HEADER_TWO,
+  h3:         BLOCKS.HEADER_TWO,
+  h4:         BLOCKS.HEADER_TWO,
+  h5:         BLOCKS.HEADER_TWO,
+  h6:         BLOCKS.HEADER_TWO,
+  blockquote: BLOCKS.BLOCKQUOTE
 }
 
 const MARK_TAGS = {
-  strong: 'bold',
-  b: 'bold',
-  em: 'italic',
-  u: 'underlined',
-  code: 'code'
+  strong: MARKS.BOLD,
+  b:      MARKS.BOLD,
+  em:     MARKS.ITALIC,
+  u:      MARKS.UNDERLINED,
+  code:   MARKS.CODE
 }
 
 const RULES = [
@@ -41,7 +42,7 @@ const RULES = [
       if (el.tagName != 'img') return
       return {
         kind: 'block',
-        type: 'image',
+        type: BLOCKS.IMAGE,
         nodes: next(el.children),
         data: {
           src: el.attribs.src
@@ -71,7 +72,7 @@ const RULES = [
 
       return {
         kind: 'block',
-        type: 'code',
+        type: BLOCK.CODE_BLOCK,
         nodes: next(children)
       }
     }
@@ -82,7 +83,7 @@ const RULES = [
       if (el.tagName != 'a') return
       return {
         kind: 'inline',
-        type: 'link',
+        type: INLINES.LINK,
         nodes: next(el.children),
         data: {
           url: el.attribs.href

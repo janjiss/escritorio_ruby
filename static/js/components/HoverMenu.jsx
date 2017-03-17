@@ -1,23 +1,23 @@
 import Portal from 'react-portal'
 import React from 'react'
-import { DEFAULT_NODE } from '../config'
+import { DEFAULT_NODE, BLOCKS, MARKS, INLINES } from '../config'
 
 const MARK_TYPES = [
-  {label: 'Bold', type: 'bold', iconClass: 'fa fa-lg fa-bold'},
-  {label: 'Italic', type: 'italic', iconClass: 'fa fa-lg fa-italic'},
-  {label: 'Underline', type: 'underlined', iconClass: 'fa fa-lg fa-underline'},
-  {label: 'Monospace', type: 'code', iconClass: 'fa fa-lg fa-code'},
+  {label: 'Bold', type: MARKS.BOLD, iconClass: 'fa fa-lg fa-bold'},
+  {label: 'Italic', type: MARKS.ITALIC, iconClass: 'fa fa-lg fa-italic'},
+  {label: 'Underline', type: MARKS.UNDERLINED, iconClass: 'fa fa-lg fa-underline'},
+  {label: 'Monospace', type: MARKS.CODE, iconClass: 'fa fa-lg fa-code'},
 ]
 
 const LINK_BUTTON = {label: 'LINK', type: 'link', iconClass: 'fa-lg fa fa-link'}
 
 const BLOCK_TYPES = [
-  {label: 'H1', type: 'header-one', iconClass: 'fa-lg fa fa-header'},
-  {label: 'H2', type: 'header-two', iconClass: 'fa fa-header'},
-  {label: 'Blockquote', type: 'block-quote', iconClass: 'fa-lg fa fa-quote-right'},
-  {label: 'Code', type: 'code-block', iconClass: 'fa-lg fa fa-file-code-o'},
-  {label: 'UL', type: 'unordered-list', iconClass: 'fa-lg fa fa-list'},
-  {label: 'OL', type: 'ordered-list', iconClass: 'fa-lg fa fa-list-ol'},
+  {label: 'H1', type: BLOCKS.HEADER_ONE, iconClass: 'fa-lg fa fa-header'},
+  {label: 'H2', type: BLOCKS.HEADER_TWO, iconClass: 'fa fa-header'},
+  {label: 'Blockquote', type: BLOCKS.BLOCKQUOTE, iconClass: 'fa-lg fa fa-quote-right'},
+  {label: 'Code', type: BLOCKS.CODE_BLOCK, iconClass: 'fa-lg fa fa-file-code-o'},
+  {label: 'UL', type: BLOCKS.UNORDERED_LIST, iconClass: 'fa-lg fa fa-list'},
+  {label: 'OL', type: BLOCKS.ORDERED_LIST, iconClass: 'fa-lg fa fa-list-ol'},
 ]
 
 class HoverMenu extends React.Component {
@@ -55,7 +55,7 @@ class HoverMenu extends React.Component {
   }
 
   hasLinks = () => {
-    return this.getLatestState().inlines.some(inline => inline.type == 'link')
+    return this.getLatestState().inlines.some(inline => inline.type == INLINES.LINK)
   }
 
   onClickMarkButton = (e, type) => {
@@ -104,14 +104,14 @@ class HoverMenu extends React.Component {
     const transform = editorState.transform()
 
     // Handle everything but list buttons.
-    if (type != 'unordered-list' && type != 'ordered-list') {
+    if (type != BLOCKS.UNORDERED_LIST && type != BLOCKS.ORDERED_LIST) {
       const isActive = this.hasBlock(type)
-      const isList = this.hasBlock('list-item')
+      const isList = this.hasBlock(BLOCKS.LIST_ITEM)
 
       if (isList) {
         transform
           .setBlock(isActive ? DEFAULT_NODE : type)
-          .unwrapBlock(type == 'ordered-list' ? 'unordered-list' : 'ordered-list')
+          .unwrapBlock(type == BLOCKS.ORDERED_LIST ? BLOCKS.UNORDERED_LIST : BLOCKS.ORDERED_LIST)
       }
 
       else {
@@ -122,7 +122,7 @@ class HoverMenu extends React.Component {
 
     // Handle the extra wrapping required for list buttons.
     else {
-      const isList = this.hasBlock('list-item')
+      const isList = this.hasBlock(BLOCKS.LIST_ITEM)
       const isType = editorState.blocks.some((block) => {
         return !!document.getClosest(block.key, parent => parent.type == type)
       })
@@ -130,15 +130,15 @@ class HoverMenu extends React.Component {
       if (isList && isType) {
         transform
           .setBlock(DEFAULT_NODE)
-          .unwrapBlock('unordered-list')
-          .unwrapBlock('ordered-list')
+          .unwrapBlock(BLOCKS.UNORDERED_LIST)
+          .unwrapBlock(BLOCKS.ORDERED_LIST)
       } else if (isList) {
         transform
-          .unwrapBlock(type == 'ordered-list' ? 'unordered-list' : 'ordered-list')
+          .unwrapBlock(type == BLOCKS.ORDERED_LIST ? BLOCKS.UNORDERED_LIST : BLOCKS.ORDERED_LIST)
           .wrapBlock(type)
       } else {
         transform
-          .setBlock('list-item')
+          .setBlock(BLOCKS.LIST_ITEM)
           .wrapBlock(type)
       }
     }
@@ -177,7 +177,7 @@ class HoverMenu extends React.Component {
 
       const focusState = editorState
         .transform()
-        .wrapInline({ type: 'link', data: { url: e.target.value } })
+        .wrapInline({ type: INLINES.LINK, data: { url: e.target.value } })
         .collapseToEnd()
         .focus()
         .apply()

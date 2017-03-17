@@ -1,43 +1,43 @@
 import { Block } from 'slate'
 import React from 'react'
-import { DEFAULT_BLOCK } from './config'
+import { DEFAULT_BLOCK, BLOCKS, INLINES, MARKS } from './config'
 
 const schema = {
   nodes: {
-    'image': (props) => {
+    [BLOCKS.IMAGE]: (props) => {
       const { node, state } = props
       const isFocused = state.selection.hasEdgeIn(node)
       const src = node.data.get('src')
       const className = isFocused ? 'active' : null
       return (<img style={{width: "100%"}} src={src} className={className} {...props.attributes} />)
     },
-    'link': (props) => {
+    [INLINES.LINK]: (props) => {
       const { data } = props.node
       return <a {...props.attributes} href={ data.get('url') }>{props.children}</a>
     },
-    'paragraph': (props) => { return <p {...props.attributes}>{props.children}</p> },
-    'code-block': (props) => { return <pre {...props.attributes}>{props.children}</pre> },
-    'block-quote': (props) => { return <blockquote {...props.attributes}>{props.children}</blockquote> },
-    'title': (props) => { return <h1 {...props.attributes}>{props.children}</h1> },
-    'header-one': (props) => { return <h1 {...props.attributes}>{props.children}</h1> },
-    'header-two': (props) => { return <h2 {...props.attributes}>{props.children}</h2> },
-    'list-item': (props) => { return <li {...props.attributes}>{props.children}</li> },
-    'ordered-list': (props) => { return <ol {...props.attributes}>{props.children}</ol> },
-    'unordered-list': (props) => { return <ul {...props.attributes}>{props.children}</ul> }
+    [BLOCKS.PARAGRAPH]: (props) => { return <p {...props.attributes}>{props.children}</p> },
+    [BLOCKS.CODE]: (props) => { return <pre {...props.attributes}>{props.children}</pre> },
+    [BLOCKS.BLOCKQUOTE]: (props) => { return <blockquote {...props.attributes}>{props.children}</blockquote> },
+    [BLOCKS.TITLE]: (props) => { return <h1 {...props.attributes}>{props.children}</h1> },
+    [BLOCKS.HEADER_ONE]: (props) => { return <h1 {...props.attributes}>{props.children}</h1> },
+    [BLOCKS.HEADER_TWO]: (props) => { return <h2 {...props.attributes}>{props.children}</h2> },
+    [BLOCKS.LIST_ITEM]: (props) => { return <li {...props.attributes}>{props.children}</li> },
+    [BLOCKS.ORDERED_LIST]: (props) => { return <ol {...props.attributes}>{props.children}</ol> },
+    [BLOCKS.UNORDERED_LIST]: (props) => { return <ul {...props.attributes}>{props.children}</ul> }
   },
   marks: {
-    bold: {
+    [MARKS.BOLD]: {
       fontWeight: 'bold'
     },
-    code: {
+    [MARKS.CODE]: {
       fontFamily: 'monospace',
       backgroundColor: '#eee',
       padding: '3px'
     },
-    italic: {
+    [MARKS.ITALIC]: {
       fontStyle: 'italic'
     },
-    underlined: {
+    [MARKS.UNDERLINED]: {
       textDecoration: 'underline'
     }
   },
@@ -63,17 +63,17 @@ const schema = {
       },
       validate: (document) => {
         const firstNode = document.nodes.first()
-        return firstNode && firstNode.type == 'title' ? null : firstNode
+        return firstNode && firstNode.type == BLOCKS.TITLE ? null : firstNode
       },
       normalize: (transform, document, firstNode) => {
-        transform.setBlock({type: 'title'})
+        transform.setBlock({type: BLOCKS.TITLE})
       }
     },
 
     // Rule to remove any formatting on the title
     {
       match: (node) => {
-        return node.type === 'title' && node.kind === 'block'
+        return node.type === BLOCKS.TITLE && node.kind === 'block'
       },
       validate: (titleBlock) => {
         const hasMarks = titleBlock.getMarks().isEmpty()
@@ -121,7 +121,7 @@ const schema = {
       },
       validate: (document) => {
         const joinableNode = document.nodes.find((node, index) => {
-          if (!['ordered-list', 'unordered-list'].includes(node.type)) { return false }
+          if (![BLOCKS.ORDERED_LIST, BLOCKS.UNORDERED_LIST].includes(node.type)) { return false }
 
           const previousNode = document.nodes.get(index - 1)
           if (!previousNode) { return false }

@@ -1,4 +1,4 @@
-import { DEFAULT_BLOCK } from '../config'
+import { DEFAULT_BLOCK, BLOCKS } from '../config'
 
 const insertDefaultBlock = (state) => {
   return state.transform()
@@ -50,9 +50,9 @@ export default function enterPlugin() {
       // Ignore if the type is paragraph
       if (focusBlock.type === DEFAULT_BLOCK.type) return
 
-      if (type.startsWith('header') || type == 'block-quote' ) {
+      if (type.startsWith('header') || type == BLOCKS.BLOCKQUOTE ) {
         return insertDefaultBlock(state)
-      } else if (type == 'list-item')  {
+      } else if (type == BLOCKS.LIST_ITEM)  {
         e.preventDefault()
 
         if (startOffset != 0) return
@@ -62,7 +62,7 @@ export default function enterPlugin() {
         if (focusBlock.length > 0) return
         // Ignore we are not in 0 position
         return splitListAndInsertNewBlock(state, document)
-      } else if (type == 'code-block') {
+      } else if (type == BLOCKS.CODE_BLOCK) {
         if (startOffset != 0) return
         // Ignore if selection is not expanded
         if (isExpanded) return

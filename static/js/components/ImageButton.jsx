@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import Escritorio from '../api/escritorio'
 import { Block } from 'slate'
+import { BLOCKS } from '../config'
+
 const Api = new Escritorio
 
 export default class ImageControl extends Component {
@@ -37,7 +39,7 @@ export default class ImageControl extends Component {
       })
 
       const imageBlock = Block.create({
-        type: 'image',
+        type: BLOCKS.IMAGE,
         isVoid: true,
         data: { src: reader.result, inProgress: true }
       })
