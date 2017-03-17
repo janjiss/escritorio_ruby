@@ -4,6 +4,7 @@ import { Block, Editor, Raw, Html, Plain } from 'slate'
 import enterPlugin from './plugins/enterPlugin'
 import backspacePlugin from './plugins/backspacePlugin'
 import onSavePlugin from './plugins/onSavePlugin'
+import keyboardShortcuts from './plugins/keyboardShortcuts'
 import onPaste from './plugins/onPaste'
 import ImageButton from './components/ImageButton'
 import HoverMenu from './components/HoverMenu'
@@ -69,7 +70,7 @@ class EscritorioEditor extends Component {
         <div className="editable">
           <Editor
             schema={schema}
-            plugins={[backspacePlugin(), enterPlugin(), SoftBreak({ onlyIn: ['code-block'] }), onSavePlugin(this.onSave), onPaste()]}
+            plugins={[backspacePlugin(), enterPlugin(), SoftBreak({ onlyIn: ['code-block'] }), onSavePlugin(this.onSave), onPaste(), keyboardShortcuts()]}
             state={this.state.editorState}
             onChange={this.onChange}
             focus={this.focus}
