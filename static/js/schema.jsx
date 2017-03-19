@@ -16,7 +16,7 @@ const schema = {
       return <a {...props.attributes} href={ data.get('url') }>{props.children}</a>
     },
     [BLOCKS.PARAGRAPH]: (props) => { return <p {...props.attributes}>{props.children}</p> },
-    [BLOCKS.CODE]: (props) => { return <pre {...props.attributes}>{props.children}</pre> },
+    [BLOCKS.CODE_BLOCK]: (props) => { return <pre {...props.attributes}>{props.children}</pre> },
     [BLOCKS.BLOCKQUOTE]: (props) => { return <blockquote {...props.attributes}>{props.children}</blockquote> },
     [BLOCKS.TITLE]: (props) => { return <h1 {...props.attributes}>{props.children}</h1> },
     [BLOCKS.HEADER_ONE]: (props) => { return <h1 {...props.attributes}>{props.children}</h1> },
