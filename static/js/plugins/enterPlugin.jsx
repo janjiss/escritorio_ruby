@@ -50,7 +50,7 @@ export default function enterPlugin() {
       // Ignore if the type is paragraph
       if (focusBlock.type === DEFAULT_BLOCK.type) return
 
-      if (type.startsWith('header') || type == BLOCKS.BLOCKQUOTE ) {
+      if ([BLOCKS.HEADER_ONE, BLOCKS.HEADER_TWO, BLOCKS.TITLE, BLOCKS.BLOCKQUOTE].includes(type)) {
         return insertDefaultBlock(state)
       } else if (type == BLOCKS.LIST_ITEM)  {
         e.preventDefault()
